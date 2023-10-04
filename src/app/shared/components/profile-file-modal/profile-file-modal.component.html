@@ -1,0 +1,125 @@
+<div class="w-full" *ngIf="profileId != null && fbGroup">
+  <table class="min-w-full">
+    <thead class="bg-gray-4 border-solid border-0 border-b border-black">
+    <tr>
+      <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+        Файл
+      </th>
+      <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+        Комментарий
+      </th>
+      <th scope="col" class="text-md md:text-lg  font-medium text-black px-6 py-4 text-left">
+        Загрузил
+      </th>
+      <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+        Действия
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="comforta bg-gray-5 border-b transition duration-300 ease-in-out hover:bg-gray-2"
+      *ngFor="let item of profileFiles"
+    >
+      <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+        <div class="flex space-x-2 justify-center">
+          <div>
+            <a target="_blank" href="{{item.file | authFile}}" download="download" type="button" class="cursor-pointer inline-block rounded-xl px-6 pt-2.5 pb-2 bg-blue-700 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+              <fa-icon [icon]="faDownload" class="bg-blue-700"></fa-icon>
+            </a>
+          </div>
+        </div>
+      </td>
+      <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+        {{item.comment}}
+      </td>
+      <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+        {{item.user?.fullName}}
+      </td>
+      <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+        <div class="flex space-x-2 justify-center">
+          <div>
+            <button (click)="deleteProfileFile(item.id)" type="button" class="cursor-pointer inline-block rounded-xl px-6 pt-2.5 pb-2 bg-red-600 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-red-900 hover:shadow-lg focus:bg-red-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">
+              <fa-icon [icon]="faTimes" class="bg-red-600"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="text-right">
+    <button type="button" class="my-5 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" data-bs-toggle="modal" data-bs-target="#showProfileFileModal">
+      Прикрепить файл и комментарии
+    </button>
+  </div>
+
+</div>
+
+
+<div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="showProfileFileModal" tabindex="-1" aria-labelledby="showProfileFileModalTitle" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered relative w-auto pointer-events-none">
+    <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+      <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+        <h5 class="text-xl font-medium leading-normal text-gray-800" id="showProfileFileModalLabel">
+         Прикрепить файл
+        </h5>
+        <button type="button"
+                class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body relative p-4">
+        <form [formGroup]="fbGroup" (ngSubmit)="sendFile()">
+          <div>
+            <div class="mb-3 w-full">
+              <label for="comment" class="form-label inline-block mb-2 text-gray-700">Комментарий</label>
+              <textarea cols="10" type="text" formControlName="comment" class="w-full form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="comment" placeholder="Комментарий">
+              </textarea>
+            </div>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['comment'].invalid && (fbGroup.controls['comment'].dirty || fbGroup.controls['comment'].touched)">
+              <div *ngIf="fbGroup.controls['comment'].errors">
+                <div *ngIf="fbGroup.controls['comment'].errors.required">
+                  Поле комментарий обязателен для заполненеия
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('comment')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['comment']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <div class="flex justify-center">
+            <div class="mb-3 w-full">
+              <label for="formFile" class="form-label inline-block mb-2 text-gray-700">Файл</label>
+              <input class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" type="file" (change)="onFileChange($event)" id="formFile">
+            </div>
+          </div>
+
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('file')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['file']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <!--Форма-->
+          <div class="grid grid-cols-12 gap-3 px-4 py-12" *ngIf="fbGroup.valid">
+            <div class="col-span-12 sm:col-span-12 md:col-span-12 md:flex justify-center">
+              <button type="submit" class="w-80 text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md" >Отправить данные</button>
+            </div>
+          </div>
+          <!--Форма-->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,334 @@
+<!--Search Vacancy-->
+<section class="py-24">
+  <div class="container bg-white rounded-lg mx-auto h-auto py-24 py-4 text-center px-4">
+
+    <h1 class="montserrat font-bold light-gray-1 text-2xl px-2">ВАКАНСИИ</h1>
+    <div class="grid grid-cols-12 gap-4 mt-14 px-4">
+      <div class="col-span-12 sm:col-span-6 md:col-span-9">
+        <input [(ngModel)]="parameters.search" class="montserrat rounded-xl border-2 border-gray-300 w-full h-10 px-2">
+      </div>
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <button (click)="onSearch()" class="shadow-lg w-full inline-block text-white bg-red-color text-sm px-8 py-2 rounded hover:bg-red-900">Поиск</button>
+      </div>
+      <!--      Army Region-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="armyRegion"
+          [searchKeyword]="keyword"
+          placeholder="Регионы командования"
+          (selected)='selectArmyRegionEvent($event)'
+          (inputCleared)="isClosedArmyRegionAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+<!--      Qualification-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="qualification"
+          [searchKeyword]="keyword"
+          placeholder="Квалифицация"
+          (selected)='selectQualificationEvent($event)'
+          (inputCleared)="isClosedQualificationAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      ArmyType-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="armyType"
+          [searchKeyword]="keyword"
+          placeholder="Типы ВС"
+          (selected)='selectArmyTypeEvent($event)'
+          (inputCleared)="isClosedArmyTypeAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+
+      <!--      Secret Level-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="secretLevel"
+          [searchKeyword]="keyword"
+          placeholder="Доступ к секретам"
+          (selected)='selectSecretLevelEvent($event)'
+          (inputCleared)="isClosedSecretLevelAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+
+      <!--      JobCategory-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="jobCategory"
+          [searchKeyword]="keyword"
+          placeholder="Категория тарифа"
+          (selected)='selectJobCategoryEvent($event)'
+          (inputCleared)="isClosedJobCategoryAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Position-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="position"
+          [searchKeyword]="keyword"
+          placeholder="Позиция"
+          (selected)='selectPositionEvent($event)'
+          (inputCleared)="isClosedPositionAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Position-->
+      <div class="col-span-12 md:col-span-6">
+        <select (click)="changePageSize($event.target)" class="w-full h-full bg-white border-2 border-black p-2">
+          <option [selected]="parameters.pageSize == page" [value]="page" *ngFor="let page of perPage">
+            {{page}} объектов
+          </option>
+        </select>
+      </div>
+
+    </div>
+    <div class="w-full py-8 text-left px-4">
+      <button (click)="changeShow('list')" class="text-black px-4"><fa-icon class="text-2xl" [icon]="faBars"></fa-icon></button>
+      <button (click)="changeShow('table')" class="text-black px-4"><fa-icon class="text-2xl" [icon]="faList"></fa-icon></button>
+      <button (click)="changeShow('card')" class="text-black px-4"> <fa-icon class="text-2xl" [icon]="faTh"></fa-icon></button>
+    </div>
+    <div class="grid grid-cols-12 gap-4 px-4">
+      <div class="col-span-12 sm:col-span-12 md:col-span-9" *ngIf="data">
+        <!--      List  -->
+        <div class="w-full" *ngIf="showType == 'list'">
+          <div class="grid  bg-gray-2 shadow-lg vacancy-card my-5 h-auto w-full py-5 px-5 text-left"
+               *ngFor="let vacancy of data.data | paginate:{
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.pageIndex,
+                  totalItems: data.count
+                };">
+            <div class="w-full">
+          <span class="sm:flex justify-between mb-4">
+          <p class="montserrat text-2xl light-gray-1">
+            {{vacancy.position?.titleRu}}
+          </p>
+          <p class="montserrat text-lg light-gray-1">
+            {{vacancy.createdAt | date:'dd/MM/yyyy HH:mm'}}
+          </p>
+        </span>
+              <span class="flex">
+            <p class="mx-1 montserrat text-sm light-gray-1">
+              {{vacancy.city}} |
+              {{vacancy.area?.titleRu}} |
+              {{vacancy.armyType?.titleRu}} |
+              {{vacancy.armyRegion?.titleRu}} |
+              {{vacancy.qualification?.titleRu}} |
+            </p>
+            <p class="mx-1 montserrat text-sm light-gray-1">
+              {{vacancy.jobCategory?.titleRu}}
+            </p>
+          </span>
+              <div class="bg-white py-8 px-4 my-4 rounded-lg max-w-full">
+                <p class="text-md my-2 light-gray-1">
+                  {{vacancy.descriptionRu}}
+                </p>
+              </div>
+
+            </div>
+            <div class="md:flex items-end justify-end">
+              <a [routerLink]="'/executor/vacancy-update/'+vacancy.id" class="inline-block m-2 text-white main-blue-bg text-sm px-8 py-2 rounded-lg shadow-lg hover:bg-blue-900">Редактировать</a>
+              <a  (click)="delete(vacancy.id)" class="cursor-pointer inline-block m-2 text-white bg-red-color text-sm px-8 py-2 rounded-lg shadow-lg hover:bg-red-900">Удалить</a>
+            </div>
+          </div>
+        </div>
+        <!--      Table  -->
+        <div class="w-full" *ngIf="showType == 'table'">
+          <div class="grid h-auto w-full py-5 px-5 text-left">
+            <div class="overflow-x-auto">
+              <div class="comforta overflow-x-auto">
+                <table class="min-w-full">
+                  <thead class="bg-white border-solid border-b border-black">
+                  <tr>
+                    <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+                      Вакансия
+                    </th>
+                    <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+                      Дата
+                    </th>
+                    <th scope="col" class="text-md md:text-lg  font-medium text-black px-6 py-4 text-center">
+                      Регион
+                    </th>
+                    <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+                      Категория
+                    </th>
+                    <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+                      Требования
+                    </th>
+                    <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="comforta tr-box-shadow my-4 shadow-lg bg-gray-2 border-b transition duration-300 ease-in-out hover:bg-gray-2"
+                      *ngFor="let vacancy of data.data | paginate:{
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.pageIndex,
+                  totalItems: data.count
+                };"
+                  >
+                    <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      <p>
+                        {{vacancy.position?.titleRu}}
+                      </p>
+                    </td>
+                    <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      {{vacancy.createdAt | date:'dd/MM/yyyy HH:mm'}}
+                    </td>
+                    <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+                      {{vacancy.city}}
+                    </td>
+                    <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+                      {{vacancy.jobCategory?.titleRu}}
+                    </td>
+                    <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+                     {{vacancy.descriptionRu}}
+                    </td>
+                    <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+                      <a  [routerLink]="'/executor/vacancy-update/'+vacancy.id" class="main-blue-color mx-1"><fa-icon [icon]="faPencilAlt"></fa-icon></a>
+                      <a (click)="delete(vacancy.id)" class="cursor-pointer red-color mx-1"><fa-icon [icon]="faTimesCircle"></fa-icon></a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <!--      Cards  -->
+        <div class="grid grid-cols-12 gap-4 h-auto w-full py-5 px-5 text-left" *ngIf="showType == 'card'">
+          <div class="col-span-12 sm:col-span-6 md:col-span-4 py-4 px-4 my-4 bg-gray-2 rounded-md"
+               *ngFor="let vacancy of data.data | paginate:{
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.pageIndex,
+                  totalItems: data.count
+                };"
+          >
+            <p class="montserrat font-bold text-sm text-black">
+              {{vacancy.position?.titleRu}}
+            </p>
+            <span class="flex my-4">
+              <div class="w-full flex">
+                <p class="mx-1 montserrat text-sm light-gray-1">
+                  {{vacancy.city}} |
+                  {{vacancy.area?.titleRu}} |
+                  {{vacancy.armyType?.titleRu}} |
+                  {{vacancy.armyRegion?.titleRu}} |
+                  {{vacancy.qualification?.titleRu}}
+                </p>
+                <p class="mx-1 montserrat text-sm light-gray-1">
+                  {{vacancy.jobCategory?.titleRu}}
+                </p>
+              </div>
+              <div class="flex">
+                <a [routerLink]="'/executor/vacancy-update/'+vacancy.id" class="main-blue-color mx-1"><fa-icon [icon]="faPencilAlt"></fa-icon></a>
+                    <a  (click)="delete(vacancy.id)" class="cursor-pointer red-color mx-1"><fa-icon [icon]="faTimesCircle"></fa-icon></a>
+              </div>
+            </span>
+            <div class="bg-white py-2 px-4 my-4 rounded-lg max-w-full">
+              <p class="text-sm my-2 light-gray-1">
+                {{vacancy.descriptionRu}}
+              </p>
+            </div>
+            <div class="text-gray-2 text-right">
+              <p class="montserrat text-sm light-gray-1">
+                {{vacancy.createdAt | date:'dd/MM/yyyy HH:mm'}}
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="flex justify-center my-4">
+          <pagination-controls
+            previousLabel="Prev"
+            nextLabel="Next"
+            [autoHide]="true"
+            [responsive]="true"
+            (pageChange)="onPagerChange($event)"
+          ></pagination-controls>
+        </div>
+
+      </div>
+      <div class="col-span-12 sm:col-span-6 md:col-span-3 mt-5 order-first md:order-last">
+        <div class="w-full main-blue-bg h-56 rounded-lg flex items-center justify-center">
+            <span>
+              <p class="text-white">Добавить вакансию </p>
+              <a routerLink="/executor/vacancy-create" class="inline-block border-white border rounded-full h-24 w-24 my-4 cursor-pointer">
+                <span class="w-full h-full flex justify-center items-center">
+                   <fa-icon [icon]="faPlus" class="text-4xl text-white"></fa-icon>
+                </span>
+              </a>
+            </span>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+</section>
+<!--End Search Vacancy-->
+
+<!--Start New Vacancy-->
+
+<!--End New Vacancy-->
+

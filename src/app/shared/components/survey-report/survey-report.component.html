@@ -1,0 +1,13 @@
+<div class="w-full px-4">
+  <div class="text-right">
+    <button class="btn main-blue-bg px-4 py-4 text-white" *ngIf="!clicked" (click)="getReport()">
+      Сформировать отчет
+    </button>
+  </div>
+  <div class="text-right" *ngIf="link != null">
+    <a class="btn main-blue-bg px-4 py-4 text-white" download="download" href="{{link | authFile}}" target="_blank">
+      Скачать отчет
+    </a>
+  </div>
+
+</div>

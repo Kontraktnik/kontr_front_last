@@ -1,0 +1,29 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full my-4">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/calculation-data" class="text-blue-600 hover:text-blue-700">Калькуляционные данные</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li><a routerLink="/admin/position-list" class="text-blue-600 hover:text-blue-700">Позиции</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Информация о позиции</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Информация о позиции</h1>
+    </div>
+    <div class="col-span-12 p-5" *ngIf="(position$|async)?.data">
+      <p class="font-bold">Наименование на русском: {{(position$|async)?.data?.titleRu}}</p>
+      <p class="font-bold">Наименование на казахском: {{(position$|async)?.data?.titleKz}}</p>
+      <p class="font-bold">Наименование на английском: {{(position$|async)?.data?.titleEn}}</p>
+      <p class="font-bold">Категория тарифов: {{(position$|async)?.data?.jobCategory?.titleRu}}</p>
+      <p class="font-bold">Уровень доступа к секретам: {{(position$|async)?.data?.secretLevel?.titleRu}}</p>
+      <p class="font-bold">Тип ВС: {{(position$|async)?.data?.armyType?.titleRu}}</p>
+      <p class="font-bold">Категория позиции: {{(position$|async)?.data?.categoryPosition?.titleRu}}</p>
+
+
+
+    </div>
+  </div>
+</div>
+

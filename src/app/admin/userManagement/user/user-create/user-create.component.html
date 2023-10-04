@@ -1,0 +1,289 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full my-4">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/user-management" class="text-blue-600 hover:text-blue-700">Администрирование пользователями</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li><a routerLink="/admin/user-list" class="text-blue-600 hover:text-blue-700">Список пользователей</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Создать Пользователя</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Создать Пользователя</h1>
+    </div>
+    <div class="col-span-12 p-5 text-right">
+      <form [formGroup]="fbGroup" (ngSubmit)="saveForm()">
+
+        <div class="my-10">
+          <ng-autocomplete
+            [data]="roles"
+            [searchKeyword]="keyword"
+            placeholder="Роли"
+            (selected)='selectRoleEvent($event)'
+            (inputCleared)="isClosedRoleAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+            >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a class="text-left" [innerHTML]="item.titleRu"></a>
+          </ng-template>
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['roleId'].invalid && (fbGroup.controls['roleId'].dirty || fbGroup.controls['roleId'].touched)">
+            <div *ngIf="fbGroup.controls['roleId'].errors">
+              <div *ngIf="fbGroup.controls['roleId'].errors.required">
+                Поле Роль обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('RoleId')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['RoleId']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10" *ngIf="showArea">
+          <ng-autocomplete
+            [data]="areas"
+            [searchKeyword]="keyword"
+            placeholder="Область"
+            (selected)='selectAreaEvent($event)'
+            (inputCleared)="isClosedAreaAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+            >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a class="text-left" [innerHTML]="item.titleRu"></a>
+          </ng-template>
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['areaId'].invalid && (fbGroup.controls['areaId'].dirty || fbGroup.controls['areaId'].touched)">
+            <div *ngIf="fbGroup.controls['areaId'].errors">
+              <div *ngIf="fbGroup.controls['areaId'].errors.required">
+                Поле Регион обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('AreaId')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['AreaId']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input [imask]="{mask: '000-000-000-000'}" [unmask]="true" formControlName="iin" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="iin" placeholder="ИИН">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['iin'].invalid && (fbGroup.controls['iin'].dirty || fbGroup.controls['iin'].touched)">
+            <div *ngIf="fbGroup.controls['iin'].errors">
+              <div *ngIf="fbGroup.controls['iin'].errors.required">
+                Поле ИИН обязательно для заполнения
+              </div>
+              <div *ngIf="fbGroup.controls['iin'].errors.pattern">
+                Неправильный формат ИИН
+              </div>
+              <div *ngIf="fbGroup.controls['iin'].errors.minlength">
+                Минимальное значение 12 цифр
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('IIN')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['IIN']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input formControlName="name" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="name" placeholder="Имя">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['name'].invalid && (fbGroup.controls['name'].dirty || fbGroup.controls['name'].touched)">
+            <div *ngIf="fbGroup.controls['name'].errors">
+              <div *ngIf="fbGroup.controls['name'].errors.required">
+                Поле Имя обязательно для заполнения
+              </div>
+              <div *ngIf="fbGroup.controls['name'].errors.pattern">
+                Разрешены только кириллица
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Name')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Name']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input formControlName="surname" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="surname" placeholder="Фамилия">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['surname'].invalid && (fbGroup.controls['surname'].dirty || fbGroup.controls['surname'].touched)">
+            <div *ngIf="fbGroup.controls['surname'].errors">
+              <div *ngIf="fbGroup.controls['surname'].errors.required">
+                Поле Фамилия обязательно для заполнения
+              </div>
+              <div *ngIf="fbGroup.controls['surname'].errors.pattern">
+                Разрешены только кириллица
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Surname')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Surname']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input formControlName="patronymic" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="patronymic" placeholder="Отчество">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['patronymic'].invalid && (fbGroup.controls['patronymic'].dirty || fbGroup.controls['patronymic'].touched)">
+            <div *ngIf="fbGroup.controls['patronymic'].errors">
+              <div *ngIf="fbGroup.controls['patronymic'].errors.required">
+                Поле Отчество обязательно для заполнения
+              </div>
+              <div *ngIf="fbGroup.controls['patronymic'].errors.pattern">
+                Разрешены только кириллица
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Patronymic')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Patronymic']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input [imask]="{mask: '+{7}(000)000-00-00'}" [unmask]="true" formControlName="phone" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="phone" placeholder="Телефон">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['phone'].invalid && (fbGroup.controls['phone'].dirty || fbGroup.controls['phone'].touched)">
+            <div *ngIf="fbGroup.controls['phone'].errors">
+              <div *ngIf="fbGroup.controls['phone'].errors.required">
+                Поле телефон обязательно для заполнения
+              </div>
+              <div *ngIf="fbGroup.controls['phone'].errors.pattern">
+                Введите валидное значение для этого поля
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Phone')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Phone']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input formControlName="email" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="email" placeholder="Email">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['email'].invalid && (fbGroup.controls['email'].dirty || fbGroup.controls['email'].touched)">
+            <div *ngIf="fbGroup.controls['email'].errors">
+              <div *ngIf="fbGroup.controls['email'].errors.required">
+                Поле Email обязательно для заполнения
+              </div>
+              <div *ngIf="fbGroup.controls['email'].errors.email">
+                Почта не валидна
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Email')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Email']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input formControlName="password" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="password" name="password" placeholder="Пароль">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['password'].invalid && (fbGroup.controls['password'].dirty || fbGroup.controls['password'].touched)">
+            <div *ngIf="fbGroup.controls['password'].errors">
+              <div *ngIf="fbGroup.controls['password'].errors.required">
+                Поле пароль обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Password')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Password']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+        <div class="my-10 text-left">
+          <input formControlName="verified" type="checkbox" class="" id="confirmation" name="confirmation">
+          <label class="ml-2 montserrat light-gray-1 cursor-pointer text-md" for="confirmation">
+            Пользователь подтвержден
+          </label>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Verified')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Verified']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="my-10 text-left">
+            <input formControlName="status" type="checkbox" class="" id="active" name="active">
+            <label class="ml-2 montserrat light-gray-1 cursor-pointer text-md" for="active">
+              Пользователь активен
+            </label>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('Status')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['Status']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+          <!--Валидационная Ошибка сервера-->
+          </div>
+
+
+
+
+        <button [disabled]="fbGroup.invalid" class="{{fbGroup.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">
+          Сохранить
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+

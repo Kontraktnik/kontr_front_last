@@ -1,0 +1,57 @@
+<section class="w-full">
+  <section class="main-blue-bg">
+    <nav class="container mx-auto  bg-transparent relative flex flex-wrap items-center justify-between py-4  text-gray-500 hover:text-gray-700 focus:text-gray-700 navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid w-full flex flex-wrap items-center justify-between px-6">
+        <button class="inline-block text-white" (click)="toggleSidebar()">
+          <fa-icon [icon]="faArrowAltCircleLeft"  *ngIf="sidebarState;else closed">
+          </fa-icon>
+          <ng-template #closed>
+            <fa-icon [icon]="faArrowAltCircleRight">
+            </fa-icon>
+          </ng-template>
+        </button>
+
+        <a class="ml-2 tourney-thin text-xl sm:text-xl md:text-2xl text-white" routerLink="/">jauynger.gov.kz</a>
+
+        <button class="navbar-toggler text-white border-0 hover:shadow-none hover:no-underline py-2 px-2.5 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none focus:no-underline" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars"
+               class="w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path fill="currentColor"
+                  d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z">
+            </path>
+          </svg>
+        </button>
+        <div class="collapse navbar-collapse flex-grow items-center" id="navbarSupportedContent">
+          <!-- Left links -->
+          <ul class="navbar-nav flex flex-col pl-0 list-style-none mr-auto">
+            <li class="nav-item">
+              <a class="comforta nav-link text-white hover:main-color focus:text-blue-900 p-0 text-sm" routerLink="/med/received-requests">Медкомиссия
+                <span class="inline-block py-1 px-1.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-600 text-white rounded ml-2">{{sendedCount}}</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="comforta nav-link text-white hover:main-color focus:text-blue-900 p-0 text-sm" routerLink="/med/received-psycho-requests">Психотест
+                <span class="inline-block py-1 px-1.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-600 text-white rounded ml-2">{{sendedPsychoCount}}</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="comforta nav-link text-white hover:main-color focus:text-blue-900 p-0 text-sm" routerLink="/med/accepted-requests">Согласование</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="comforta nav-link text-white hover:main-color focus:text-blue-900 p-0 text-sm" routerLink="/med/rejected-requests">Отклоненные</a>
+            </li>
+
+          </ul>
+          <!-- Left links -->
+        </div>
+        <!-- Collapsible wrapper -->
+
+      </div>
+    </nav>
+  </section>
+
+</section>
+
+

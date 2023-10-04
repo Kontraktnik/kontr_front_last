@@ -1,0 +1,58 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+
+    <div class="col-span-12 p-5 text-right">
+
+      <nav class="rounded-md w-full">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/user-management" class="text-blue-600 hover:text-blue-700">Администрирование пользователями</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Роли</li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-span-12 w-full p-5">
+
+      <div class="overflow-x-auto" *ngIf="(data$|async)?.data != null">
+        <table class="min-w-full rounded">
+          <thead class="">
+          <tr class="rounded">
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Уникальный Идентификатор
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование на казахском
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование на русском
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование на английском
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="montserrat border-b text-center" *ngFor="let item of (data$|async)?.data">
+            <td class="px-6 py-4">
+              {{item.id}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.titleKz}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.titleRu}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.titleEn}}
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+  </div>
+</div>

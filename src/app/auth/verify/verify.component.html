@@ -1,0 +1,83 @@
+<!--Register Start-->
+<div class="container mx-auto h-auto py-24 py-4 text-center min-h-screen">
+  <h1 class="montserrat font-bold light-gray-1 text-2xl font-bold px-2">Подтвердить аккаунт</h1>
+  <!--Форма-->
+  <div class="text-red-500" *ngIf="errors.status">
+    <ul>
+      <li *ngFor="let error of (errors.messages | valueArray)">{{error}}</li>
+    </ul>
+  </div>
+  <form [formGroup]="confirmForm" (ngSubmit)="confirmForm.valid && onVerify()">
+    <div class="mx-auto mt-8 sm:w-full md:w-1/2 text-center px-4">
+      <div class="text-center">
+        На указанный вами номер телефона было отправлено смс с кодом подтверждения. Введите полученный код, чтобы продолжить регистрацию.
+      </div>
+      <!--ИИН-->
+      <div class="form-group my-8">
+        <input [disabled]="true" [imask]="{mask: '000-000-000-000'}" [unmask]="true" formControlName="iin" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="iin" placeholder="ИИН">
+        <div class="text-red-500" *ngIf="confirmForm.controls['iin'].invalid && (confirmForm.controls['iin'].dirty || confirmForm.controls['iin'].touched)">
+          <div *ngIf="confirmForm.controls['iin'].errors">
+            <div *ngIf="confirmForm.controls['iin'].errors.required">
+              Поле ИИН обязательно для заполнения
+            </div>
+            <div *ngIf="confirmForm.controls['iin'].errors.pattern">
+              Неправильный формат ИИН
+            </div>
+            <div *ngIf="confirmForm.controls['iin'].errors.minlength">
+              Минимальное значение 12 цифр
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('IIN')">
+            <div *ngFor="let validationError of errors.messages['IIN']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--ИИН-->
+      <!--КОД-->
+      <div class="form-group my-8">
+        <input [imask]="{mask: '000-000'}" [unmask]="true" formControlName="code" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="code" placeholder="Код">
+        <div class="text-red-500" *ngIf="confirmForm.controls['code'].invalid && (confirmForm.controls['code'].dirty || confirmForm.controls['code'].touched)">
+          <div *ngIf="confirmForm.controls['code'].errors">
+            <div *ngIf="confirmForm.controls['code'].errors.required">
+              Поле код обязательно для заполнения
+            </div>
+            <div *ngIf="confirmForm.controls['code'].errors.pattern">
+              Неправильный формат кода
+            </div>
+            <div *ngIf="confirmForm.controls['code'].errors.minlength">
+              Минимальное значение 6 цифр
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Code')">
+            <div *ngFor="let validationError of errors.messages['Code']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--КОД-->
+
+      <button [disabled]="confirmForm.invalid" class="{{confirmForm.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">Подтвердить аккаунт</button>
+      <br>
+    </div>
+  </form>
+  <a *ngIf="!isSended;else notSended" (click)="sendNotification()">Отправить вновь</a>
+  <ng-template #notSended>
+    <p class="text-red-500 text-sm">
+      Вы сможете вновь отправить через секунд: {{seconds}}
+    </p>
+  </ng-template>
+  <!--  Конец формы-->
+
+</div>
+<!--End Register Start-->

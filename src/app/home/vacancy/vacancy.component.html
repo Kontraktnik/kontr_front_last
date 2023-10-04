@@ -1,0 +1,185 @@
+<!--Search Vacancy-->
+<div class="container pt-56 mx-auto h-auto py-4 text-center">
+  <h1 class="montserrat font-bold light-gray-1 text-2xl uppercase px-2">{{'front.vacancies.searchVacancy'|translate}}</h1>
+<!--  <hr class="w-2/3 h-0.5 ml-auto">-->
+  <div class="grid grid-cols-12 gap-4 mt-14 px-4">
+      <div class="col-span-12 md:col-start-3 sm:col-span-6 md:col-span-8">
+        <div class="w-full text-left">
+          <ng-autocomplete
+            [data]="positions"
+            [searchKeyword]="keyword"
+            placeholder="{{'front.vacancies.positions'|translate}}"
+            (selected)='selectEvent($event)'
+            (inputCleared)="isClosedAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+          </ng-autocomplete>
+
+          <ng-template #itemTemplate let-item>
+            <a [innerHTML]="item | globalTranslate: 'title': translate.currentLang"></a>
+          </ng-template>
+
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+<!--        <input class="montserrat rounded-xl border-2 border-gray-300 w-full h-10 px-2" placeholder="Должность">-->
+      </div>
+<!--    <div class="col-span-12 sm:col-span-6 md:col-span-4">-->
+<!--      <input #search (keyup.enter)="onSearch()" class="montserrat rounded-xl border-2 border-gray-300 w-full h-10 px-2" placeholder="Регион">-->
+<!--    </div>-->
+<!--    <div class="col-span-12 sm:col-span-6 md:col-span-2">-->
+<!--      <button (click)="onSearch()" class=" w-full inline-block text-white bg-red-color text-sm px-8 py-2 rounded hover:bg-red-900">Поиск</button>-->
+<!--    </div>-->
+  </div>
+</div>
+<!--End Search Vacancy-->
+
+<!--Start New Vacancy-->
+<div class="container mx-auto h-auto py-6 py-4 text-center">
+  <h2 class="montserrat light-gray-1 text-xl uppercase px-2">{{'front.vacancies.newVacancies'|translate}}</h2>
+  <div class="grid grid-cols-12 gap-4 mt-14 px-4">
+    <div class="col-span-12 sm:col-span-4 md:col-span-4">
+      <div class="bg-gray-2 my-5 h-auto w-full py-5 px-4 text-left">
+        <p class="light-gray-1 text-xl font-semibold text-center" [innerHTML]="'front.vacancies.armyRegions'|translate"></p>
+        <div class="my-4">
+
+        <div class="flex items-center my-2">
+          <div>
+            <div>
+              <input (click)="checkedAllCheckbox(false,false,true)" [checked]="isCheckedAllCheckbox(false,false,true)" type="checkbox" class="w-5 h-5 focus:accent-pink-500" id="armyRegionAll">
+              <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="armyRegionAll">{{'SYSTEM.all'|translate}}</label>
+            </div>
+            <div *ngFor="let armyRegion of armyRegions">
+              <input (click)="onCheckboxSelected(null,null,armyRegion.id)" type="checkbox" [checked]="isCheckboxChecked(null,null,armyRegion.id)" [value]="armyRegion.id" class="w-5 h-5 focus:accent-pink-500" id="region{{armyRegion.id}}" name="army_type">
+              <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="region{{armyRegion.id}}">{{armyRegion | globalTranslate: 'title': translate.currentLang}}</label>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+      </div>
+      <div class="bg-gray-2 my-5 h-auto w-full py-5 px-4 text-left">
+        <p class="light-gray-1 text-xl font-semibold text-center" [innerHTML]="'front.vacancies.armyTypes'|translate"></p>
+        <div class="my-4">
+
+        <div class="flex items-center my-2">
+          <div>
+            <div>
+              <input (click)="checkedAllCheckbox(true,false,false)" [checked]="isCheckedAllCheckbox(true,false,false)" type="checkbox" class="w-5 h-5 focus:accent-pink-500" id="armyTypeAll">
+              <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="armyTypeAll">{{'SYSTEM.all'|translate}}</label>
+            </div>
+            <div *ngFor="let army of armyTypes">
+              <input (click)="onCheckboxSelected(army.id, null, null)" type="checkbox" [checked]="isCheckboxChecked(army.id,null,null)" [value]="army.id" class="w-5 h-5 focus:accent-pink-500" id="army{{army.id}}" name="army_type">
+              <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="army{{army.id}}">{{army | globalTranslate: 'title': translate.currentLang}}</label>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+      </div>
+      <div class="bg-gray-2 my-5 h-auto w-full py-5 px-4">
+        <p class="light-gray-1 font-semibold">{{'front.vacancies.areas'|translate}}</p>
+        <div class="my-4">
+          <div class="text-left">
+            <input (click)="checkedAllCheckbox(false,true,false)" [checked]="isCheckedAllCheckbox(false,true,false)" type="checkbox" class="w-5 h-5 focus:accent-pink-500" id="areaAll">
+            <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="areaAll">{{'SYSTEM.all'|translate}}</label>
+          </div>
+          <div class="flex items-center my-2" *ngFor="let area of areas">
+            <input (click)="onCheckboxSelected(null, area.id, null)" type="checkbox" [checked]="isCheckboxChecked(null,area.id,null)" [value]="area.id" class="w-5 h-5 focus:accent-pink-500" id="name{{area.id}}" name="region">
+            <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="name{{area.id}}">{{area | globalTranslate: 'title': translate.currentLang}}</label>
+          </div>
+        </div>
+      </div>
+<!--      <div class="bg-gray-2 my-5 h-auto w-full py-5 px-4">-->
+<!--        <p class="light-gray-1 text-xl font-semibold">Фильтр</p>-->
+<!--        <div class="my-4">-->
+<!--          <div class="flex items-center my-2" *ngFor="let item of ',,,,'.split(',')">-->
+<!--            <input type="checkbox" class="w-5 h-5 focus:accent-pink-500"  id="name{{item}}" name="filters{{item}}">-->
+<!--            <label class="ml-2 montserrat light-gray-1 cursor-pointer text-xl" for="filters{{item}}">Фильтр</label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+    <div class="col-span-12 sm:col-span-8 md:col-span-8" *ngIf="activeVacancy == null">
+
+      <div class="grid h-full bg-gray-2 shadow-lg vacancy-card my-5 h-auto w-full py-5 px-5 text-left"
+          *ngFor="let vacancy of vacancies | paginate : {
+                  itemsPerPage: pageSize,
+                  currentPage: pageIndex,
+                  totalItems: totalCount
+            };">
+        <div class="w-full cursor-pointer" (click)="setActiveVacancy(vacancy)">
+          <span class="sm:flex justify-between mb-4">
+          <p class="montserrat text-2xl light-gray-1" *ngIf="vacancy.position!=null">
+             {{vacancy.position | globalTranslate: 'title': translate.currentLang}}
+          </p>
+          <p class="montserrat text-lg light-gray-1">
+            {{vacancy.createdAt|date:"dd.MM.yyyy"}}
+          </p>
+        </span>
+          <span class="sm:flex justify-start mb-4">
+            <p class="montserrat text-sm light-gray-1 mr-5" *ngIf="vacancy.area!=null"><b>{{vacancy.area | globalTranslate: 'title': translate.currentLang}}</b></p>
+            <p class="montserrat text-sm light-gray-1 mr-5"><b>{{vacancy.city}}</b></p>
+            <p class="montserrat text-sm light-gray-1 mr-5" *ngIf="vacancy.armyRegion!=null">
+              <b>{{vacancy.armyRegion | globalTranslate: 'title': translate.currentLang}}</b>
+            </p>
+            <p class="montserrat text-sm light-gray-1 mr-5" *ngIf="vacancy.armyType!=null">
+              <b>{{vacancy.armyType | globalTranslate:  'title': translate.currentLang}}</b>
+            </p>
+          </span>
+          <hr class="border-gray-600">
+          <p class="text-md my-2 light-gray-1" [innerHTML]="vacancy | globalTranslate: 'description': translate.currentLang: 100"></p>
+        </div>
+        <div class="flex justify-end">
+          <a routerLink="/user/create-request/{{vacancy.id}}" class="text-white bg-red-color text-sm px-8 py-2 rounded hover:bg-red-900 cursor-pointer">{{'navbar.applyRequest'|translate}}</a>
+        </div>
+      </div>
+
+      <pagination-controls
+        previousLabel="Prev"
+        nextLabel="Next"
+        [autoHide]="true"
+        [responsive]="true"
+        (pageChange)="onPagerChange($event)"
+      ></pagination-controls>
+
+    </div>
+
+    <div class="col-span-12 sm:col-span-8 md:col-span-8 min-h-full" *ngIf="activeVacancy">
+
+      <div class="grid h-full bg-gray-2 shadow-lg vacancy-card my-5 h-auto w-full py-5 px-5 text-left">
+        <div class="w-full">
+          <span class="sm:flex justify-between mb-4">
+          <p class="montserrat text-2xl light-gray-1" *ngIf="activeVacancy.position!=null">
+             {{activeVacancy.position | globalTranslate: 'title': translate.currentLang}}
+          </p>
+          <p class="montserrat text-lg light-gray-1">
+            {{activeVacancy.createdAt|date:"dd.MM.yyyy"}}
+          </p>
+        </span>
+          <span class="sm:flex justify-start mb-4">
+            <p class="montserrat text-sm light-gray-1 mr-5" *ngIf="activeVacancy.area!=null"><b>{{activeVacancy.area | globalTranslate: 'title': translate.currentLang}}</b></p>
+            <p class="montserrat text-sm light-gray-1 mr-5"><b>{{activeVacancy.city}}</b></p>
+            <p class="montserrat text-sm light-gray-1 mr-5" *ngIf="activeVacancy.armyRegion!=null">
+              <b>{{activeVacancy.armyRegion | globalTranslate: 'title': translate.currentLang}}</b>
+            </p>
+            <p class="montserrat text-sm light-gray-1 mr-5" *ngIf="activeVacancy.armyType!=null">
+              <b>{{activeVacancy.armyType | globalTranslate:  'title': translate.currentLang}}</b>
+            </p>
+          </span>
+          <hr class="border-gray-600">
+          <p class="text-md my-2 light-gray-1" [innerHTML]="activeVacancy | globalTranslate: 'description': translate.currentLang"></p>
+        </div>
+        <div class="flex justify-end">
+          <a routerLink="/user/create-request/{{activeVacancy.id}}" class="text-white bg-red-color text-sm px-8 py-2 rounded hover:bg-red-900 cursor-pointer">{{'navbar.applyRequest'|translate}}</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  </div>
+<!--End New Vacancy-->

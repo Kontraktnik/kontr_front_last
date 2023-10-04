@@ -1,0 +1,24 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full my-4">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/system-data" class="text-blue-600 hover:text-blue-700">Системные данные</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li><a routerLink="/admin/education-list" class="text-blue-600 hover:text-blue-700">Образование</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Образование</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Информация о Образовании</h1>
+    </div>
+    <div class="col-span-12 p-5" *ngIf="(education$|async)?.data">
+      <p class="font-bold">Наименование на русском: {{(education$|async)?.data?.titleRu}}</p>
+      <p class="font-bold">Наименование на казахском: {{(education$|async)?.data?.titleKz}}</p>
+      <p class="font-bold">Наименование на английском: {{(education$|async)?.data?.titleEn}}</p>
+
+
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,709 @@
+<section *ngIf="currentUser != null">
+<!--User Request-->
+<div class="container mx-auto h-auto pt-56 pb-24  py-4 text-center">
+  <h1 class="montserrat-bolder font-bold light-gray-1 text-2xl capitalize px-2">{{'user.request.title'|translate}}</h1>
+  <hr class="w-2/3 h-0.5 mx-auto">
+  <h2 class="montserrat-bolder light-gray-1 my-4 text-xl px-2">{{'user.request.newRequest'|translate}}</h2>
+
+  <!--Форма-->
+  <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-12 gap-3 mt-14 px-4 bg-gray-4 py-12">
+      <!--Анкета-->
+      <div class="col-span-12 md:col-span-6 px-4">
+        <p class="comforta font-normal text-black my-4 text-xl px-2">{{'user.request.surveyUser'|translate}}</p>
+        <div class="text-left">
+          <!--ФИО-->
+          <div class="form-group my-4 text-md md:text-lg" *ngIf="currentUser">
+            <label for="name" class="comforta cursor-pointer">{{'user.request.fio'|translate}}</label>
+            <input [disabled]="true" value="{{currentUser.fullName}}" id="name" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="name">
+          </div>
+          <!--ФИО-->
+          <!--Место жительства-->
+          <div class="form-group my-4 text-md md:text-lg">
+            <label class="comforta required cursor-pointer">{{'user.request.birthArea'|translate}}</label>
+            <input [disabled]="isSaved" value="{{birthArea}}" readonly class="my-1 block px-4 py-1 w-full rounded border-black border-solid border" type="text" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="text-red-500 text-sm" *ngIf="requestForm.controls['birthAreaId'].invalid && (requestForm.controls['birthAreaId'].dirty || requestForm.controls['birthAreaId'].touched)">
+              <div *ngIf="requestForm.controls['birthAreaId'].errors">
+                <div *ngIf="requestForm.controls['birthAreaId'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.birthArea'|translate}">
+
+                </div>
+              </div>
+            </div>
+            <div class="text-red-500 text-sm" *ngIf="requestForm.controls['region'].invalid && (requestForm.controls['region'].dirty || requestForm.controls['region'].touched)">
+              <div *ngIf="requestForm.controls['region'].errors">
+                <div *ngIf="requestForm.controls['region'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.area'|translate}">
+                </div>
+              </div>
+            </div>
+            <div class="text-red-500 text-sm" *ngIf="requestForm.controls['city'].invalid && (requestForm.controls['city'].dirty || requestForm.controls['city'].touched)">
+              <div *ngIf="requestForm.controls['city'].errors">
+                <div *ngIf="requestForm.controls['city'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.city'|translate}">
+
+                </div>
+              </div>
+            </div>
+            <div class="text-red-500 text-sm" *ngIf="requestForm.controls['street'].invalid && (requestForm.controls['street'].dirty || requestForm.controls['street'].touched)">
+              <div *ngIf="requestForm.controls['street'].errors">
+                <div *ngIf="requestForm.controls['street'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.region'|translate}">
+
+                </div>
+              </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+                 id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog relative w-auto pointer-events-none">
+                <div
+                  class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+                  <div
+                    class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+                    <h5 class="text-xl font-medium leading-normal text-gray-800" id="exampleModalLabel"></h5>
+                    <button type="button"
+                            class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body relative p-4">
+                    <label for="birthAreaId" class="comforta required cursor-pointer">{{'user.request.area'|translate}}</label>
+                    <select formControlName="birthAreaId" id="birthAreaId" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="birthAreaId">
+                      <option *ngFor="let area of areas" value="{{area.id}}">{{area | globalTranslate:'title': translate.currentLang}}</option>
+                    </select>
+                    <div class="text-red-500 text-sm" *ngIf="requestForm.controls['birthAreaId'].invalid && (requestForm.controls['birthAreaId'].dirty || requestForm.controls['birthAreaId'].touched)">
+                      <div *ngIf="requestForm.controls['birthAreaId'].errors">
+                        <div *ngIf="requestForm.controls['birthAreaId'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.birthArea'|translate}">
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group my-4 text-md md:text-lg">
+                      <label for="region" class="comforta required cursor-pointer">{{'user.request.city'|translate}}</label>
+                      <input formControlName="region" id="region" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                      <div class="text-red-500 text-sm" *ngIf="requestForm.controls['region'].invalid && (requestForm.controls['region'].dirty || requestForm.controls['region'].touched)">
+                        <div *ngIf="requestForm.controls['region'].errors">
+                          <div *ngIf="requestForm.controls['region'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.city'|translate}">
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group my-4 text-md md:text-lg">
+                      <label for="city" class="comforta required cursor-pointer">{{'user.request.region'|translate}}</label>
+                      <input formControlName="city" id="city" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                      <div class="text-red-500 text-sm" *ngIf="requestForm.controls['city'].invalid && (requestForm.controls['city'].dirty || requestForm.controls['city'].touched)">
+                        <div *ngIf="requestForm.controls['city'].errors">
+                          <div *ngIf="requestForm.controls['city'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.region'|translate}">
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group my-4 text-md md:text-lg">
+                      <label for="street" class="comforta required cursor-pointer">{{'user.request.street'|translate}}</label>
+                      <input formControlName="street" id="street" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                      <div class="text-red-500 text-sm" *ngIf="requestForm.controls['street'].invalid && (requestForm.controls['street'].dirty || requestForm.controls['street'].touched)">
+                        <div *ngIf="requestForm.controls['street'].errors">
+                          <div *ngIf="requestForm.controls['street'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.street'|translate}">
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="flex justify-between">
+                      <div class="form-group my-4 text-md md:text-lg">
+                        <label for="home" class="comforta cursor-pointer">{{'user.request.home'|translate}}</label>
+                        <input formControlName="home" id="home" type="text" class="my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                      </div>
+
+                      <div class="form-group my-4 text-md md:text-lg">
+                        <label for="appartment" class="comforta cursor-pointer">{{'user.request.apartment'|translate}}</label>
+                        <input formControlName="appartment" id="appartment" type="text" class="my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                    <button type="button" class="px-6
+                      py-2.5
+                      bg-blue-600
+                      text-white
+                      font-medium
+                      text-xs
+                      leading-tight
+                      uppercase
+                      rounded
+                      shadow-md
+                      hover:bg-blue-700 hover:shadow-lg
+                      focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+                      active:bg-blue-800 active:shadow-lg
+                      transition
+                      duration-150
+                      ease-in-out
+                      ml-1" data-bs-dismiss="modal" aria-label="Close" (click)="addBirthArea()">{{'buttons.save'|translate}}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!--Место жительства-->
+          <!--IIN-->
+          <div class="form-group my-4 text-md md:text-lg" *ngIf="currentUser">
+            <label for="iin" class="comforta cursor-pointer">{{'user.request.iin'|translate}}</label>
+            <input [disabled]="true" value="{{currentUser.iin}}" id="iin" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border">
+          </div>
+          <!--IIN-->
+
+          <!--Образование-->
+          <div class="form-group my-4 text-md md:text-lg">
+            <label for="education" class="comforta required cursor-pointer">{{'user.request.education'|translate}}</label>
+            <select formControlName="educationId" id="education"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="education">
+              <option *ngFor="let education of educations" value="{{education.id}}">{{education | globalTranslate: 'title': translate.currentLang}}</option>
+            </select>
+            <div class="text-red-500 text-sm" *ngIf="requestForm.controls['educationId'].invalid && (requestForm.controls['educationId'].dirty || requestForm.controls['educationId'].touched)">
+              <div *ngIf="requestForm.controls['educationId'].errors">
+                <div *ngIf="requestForm.controls['educationId'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.education'|translate}">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Образование-->
+
+          <!--Наличие водительского удостоверения-->
+          <div class="form-group my-4 text-md md:text-lg">
+            <label class="comforta cursor-pointer">{{'user.request.driverLicense'|translate}}</label>
+<!--            <select formControlName="driverLicense" id="driver_license"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="driver_license">-->
+<!--              <option></option>-->
+<!--            </select>-->
+            <ng-multiselect-dropdown
+              [placeholder]="'SYSTEM.select'|translate"
+              [disabled]="isSaved"
+              [settings]="dropdownSettings"
+              [data]="dropdownDriverLicenseList"
+              (onSelect)="onDriverLicenseSelect($event)"
+              (onDeSelect)="onDriverLicenseDeSelect($event)"
+              (onSelectAll)="onSelectDriverLicenseAll($event)"
+              (onDeSelectAll)="onDeSelectDriverLicenseAll()"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+          <!--Наличие водительского удостоверения-->
+
+          <!--Опыт работы	-->
+          <div class="form-group my-4 text-md md:text-lg">
+            <label for="experience" class="comforta cursor-pointer">{{'user.request.experience'|translate}}</label>
+            <select formControlName="experienced" id="experience" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="address">
+              <option [value]="true">{{'SYSTEM.yes'|translate}}</option>
+              <option [value]="false">{{'SYSTEM.no'|translate}}</option>
+            </select>
+          </div>
+          <!--Опыт работы	-->
+
+          <p class="comforta text-md md:text-lg">
+            <label class="required">{{'user.request.military'|translate}}</label>
+          </p>
+          <!--1)	Прохождение воинской службы	-->
+          <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="isServedTrue">
+            <label for="service_year" class="comforta cursor-pointer">1)	{{'user.request.isServed'|translate}}</label>
+            <select (change)="changeSurvedOrVTSh($event.target)" id="service_year" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="address">
+              <option [value]="0">{{'SYSTEM.yes'|translate}}</option>
+              <option [value]="1">{{'SYSTEM.no'|translate}}</option>
+            </select>
+          </div>
+          <!--1)	Прохождение воинской службы-->
+
+          <!--Номер воинской части 	-->
+          <div *ngIf="isServedTrue" class="form-group mt-2 mb-4 text-md md:text-lg">
+            <label for="army_number" class="comforta cursor-pointer">{{'user.request.servedArmyNumber'|translate}}</label>
+            <input formControlName="servedArmyNumber" id="army_number" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="army_number">
+          </div>
+          <!--Номер воинской части -->
+
+          <!--Должность  	-->
+          <div *ngIf="isServedTrue" class="form-group mt-2 mb-4 text-md md:text-lg">
+            <label for="position" class="comforta cursor-pointer">{{'user.request.positionName'|translate}}</label>
+            <input formControlName="positionName" id="position" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="position">
+          </div>
+          <!--Должность  -->
+
+          <!--Воинское звание  	-->
+          <div *ngIf="isServedTrue" class="form-group mt-2 mb-4 text-md md:text-lg">
+            <label for="army_position" class="comforta cursor-pointer">{{'user.request.armyRank'|translate}}</label>
+            <select formControlName="armyRankId" id="army_position" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="address">
+              <option *ngFor="let rank of armyRanks" value="{{rank.id}}">{{rank | globalTranslate: 'title': translate.currentLang}}</option>
+            </select>
+          </div>
+          <!--Воинское звание  -->
+
+          <!--2)	Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва: 	-->
+          <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="!isServedTrue">
+            <label for="vtsh" class="comforta cursor-pointer">2) {{'user.request.isVtsh'|translate}}</label>
+            <select (change)="changeSurvedOrVTSh($event.target)" id="vtsh" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="address">
+              <option [value]="0">{{'SYSTEM.yes'|translate}}</option>
+              <option [value]="2">{{'SYSTEM.no'|translate}}</option>
+            </select>
+          </div>
+          <!--2)	Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва: 	-->
+
+          <!--Наименование филиала 	-->
+          <div *ngIf="!isServedTrue" class="form-group mt-2 mb-4 text-md md:text-lg">
+            <label for="vtsh_name" class="comforta cursor-pointer">{{'user.request.vtshName'|translate}}</label>
+            <select formControlName="VTShId" id="vtsh_name"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="contract_date">
+              <option *ngFor="let vtsh of listVTSh" value="{{vtsh.id}}">{{vtsh | globalTranslate: 'title': translate.currentLang}}</option>
+            </select>
+          </div>
+          <!--Наименование филиала 	-->
+
+          <!--Год обучения 	-->
+          <div *ngIf="!isServedTrue" class="form-group mt-2 mb-4 text-md md:text-lg">
+            <label for="education_year" class="comforta cursor-pointer">{{'user.request.vtshYear'|translate}}</label>
+            <input [imask]="{mask: '0000'}" [unmask]="true" formControlName="VTShYear" id="education_year" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="education_year">
+          </div>
+          <!--Год обучения 	-->
+
+          <p class="comforta text-md md:text-lg">
+            {{'user.request.vacancyTitle'|translate}}
+          </p>
+          <!--Наименование должности/вакансия  	-->
+          <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="position">
+            <label for="vacancy" class="comforta cursor-pointer">{{'user.request.vacancyName'|translate}}</label>
+            <input [disabled]="true" value="{{position | globalTranslate: 'title': translate.currentLang}}" id="vacancy" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="vacancy">
+          </div>
+          <!--Наименование должности/вакансия  	-->
+
+          <!--Срок заключения контракта-->
+          <div class="form-group my-4 text-md md:text-lg">
+            <label for="contract_date" class="comforta required cursor-pointer">{{'user.request.contractYear'|translate}}</label>
+            <select formControlName="contractYear" id="contract_date"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="contract_date">
+              <option value="3">3</option>
+              <option value="5">5</option>
+            </select>
+            <div class="text-red-500 text-sm" *ngIf="requestForm.controls['contractYear'].invalid && (requestForm.controls['contractYear'].dirty || requestForm.controls['contractYear'].touched)">
+              <div *ngIf="requestForm.controls['contractYear'].errors">
+                <div *ngIf="requestForm.controls['contractYear'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.contractYear'|translate}">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Срок заключения контракта-->
+
+          <!--Регион  	-->
+          <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="area">
+            <label for="regionVacancy" class="comforta cursor-pointer">{{'user.request.vacancyRegion'|translate}}</label>
+            <input [disabled]="true" value="{{area | globalTranslate: 'title': translate.currentLang}}" id="regionVacancy" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+          </div>
+          <!--Регион  	-->
+
+          <!--Телефон  	-->
+          <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="currentUser">
+            <label for="phone" class="comforta cursor-pointer">{{'user.request.phone'|translate}}</label>
+            <input [disabled]="true" value="{{currentUser.phone}}" id="phone" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="phone">
+          </div>
+          <!--Телефон  	-->
+
+          <!--Электронная почта  	-->
+          <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="currentUser">
+            <label for="email" class="comforta cursor-pointer">{{'user.request.email'|translate}}</label>
+            <input [disabled]="true" value="{{currentUser.email}}" id="email" type="email" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="email">
+          </div>
+          <!--Электронная почта  	-->
+
+        </div>
+      </div>
+      <!--Анкета-->
+      <!--Дополнительные документы-->
+      <div class="col-span-12 md:col-span-6 px-4">
+        <p class="comforta font-normal text-black my-4 text-xl px-2">{{'user.request.documents'|translate}}</p>
+        <div class="text-left">
+
+          <!--Фото-->
+          <div class="form-group text-md md:text-lg">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.photo'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2" *ngIf="!isSaved">
+                <label for="photo" class="comforta self-center cursor-pointer text-sm light-blue">
+                  {{'SYSTEM.attach'|translate}}
+                </label>
+                <input formControlName="imageUrl" (change)="onFileChange($event, 'imageUrl')" id="photo" type="file"  class="invisible" accept="image/*">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['imageUrl'].invalid && (requestForm.controls['imageUrl'].dirty || requestForm.controls['imageUrl'].touched)">
+                  <div *ngIf="requestForm.controls['imageUrl'].errors">
+                    <div *ngIf="requestForm.controls['imageUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.photo'|translate}">
+                    </div>
+                    <div *ngIf="requestForm.controls['imageUrl'].errors.extension">
+                      {{'validates.rules.format'|translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.imageUrl"><a target="_blank" download="download" href="{{filesData.image|authFile}}"><fa-icon [icon]="faImage" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.imageUrl && !isSaved" (click)="onDeleteFileChange('imageUrl')">&xotime;</span>
+              </div>
+
+            </div>
+
+          </div>
+          <!--Фото-->
+
+          <!--Автобиография-->
+          <div class="form-group text-md md:text-lg py-4">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.autoBio'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2 flex" *ngIf="!isSaved">
+                <label for="autobiography" class="comforta cursor-pointer text-sm light-blue self-center">
+                  {{'SYSTEM.attach'|translate}}
+                </label>
+                <input formControlName="autoBiography" (change)="onFileChange($event, 'autoBio')" id="autobiography" type="file" accept="application/msword,application/pdf" class="invisible">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['autoBiography'].invalid && (requestForm.controls['autoBiography'].dirty || requestForm.controls['autoBiography'].touched)">
+                  <div *ngIf="requestForm.controls['autoBiography'].errors">
+                    <div *ngIf="requestForm.controls['autoBiography'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.autoBio'|translate}">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.autoBiography"><a target="_blank" download="download" href="{{filesData.autoBio|authFile}}"><fa-icon [icon]="faPdfFile" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.autoBiography && !isSaved" (click)="onDeleteFileChange('autoBio')">&xotime;</span>
+              </div>
+              <div class="md:w-1/2 flex justify-end" *ngIf="!isSaved">
+                <a download="autobiography.pdf" target="_blank" href="/assets/docs/autobiography.pdf" class="comforta cursor-pointer text-sm light-blue self-center">{{'SYSTEM.downloadExample'|translate}}</a>
+              </div>
+            </div>
+
+          </div>
+          <!--Автобиография-->
+
+          <!--Документ об образовании с приложением-->
+          <div class="form-group text-md md:text-lg py-4">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.documentEducation'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2 flex" *ngIf="!isSaved">
+                <label for="diploma" class="comforta cursor-pointer text-sm light-blue self-center">
+                  {{'SYSTEM.attach'|translate}}
+                </label>
+                <input formControlName="educationUrl" (change)="onFileChange($event, 'educationUrl')" id="diploma" type="file" accept="application/msword,application/pdf" class="invisible">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['educationUrl'].invalid && (requestForm.controls['educationUrl'].dirty || requestForm.controls['educationUrl'].touched)">
+                  <div *ngIf="requestForm.controls['educationUrl'].errors">
+                    <div *ngIf="requestForm.controls['educationUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.documentEducation'|translate}">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.educationUrl"><a target="_blank" download="download" href="{{filesData.education|authFile}}"><fa-icon [icon]="faPdfFile" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.educationUrl && !isSaved" (click)="onDeleteFileChange('educationUrl')">&xotime;</span>
+              </div>
+            </div>
+
+          </div>
+          <!--Документ об образовании с приложением-->
+
+          <!--Сведения о доходах и имуществе-->
+          <div class="form-group text-md md:text-lg py-4">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.documentIncome'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2 flex" *ngIf="!isSaved">
+                <label for="profit" class="comforta cursor-pointer text-sm light-blue self-center">
+                  {{'SYSTEM.submitDeclaration'|translate}}
+                </label>
+                <input formControlName="incomePropertyUrl" (change)="onFileChange($event, 'income')" id="profit" type="file" accept="application/msword,application/pdf" class="invisible">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['incomePropertyUrl'].invalid && (requestForm.controls['incomePropertyUrl'].dirty || requestForm.controls['incomePropertyUrl'].touched)">
+                  <div *ngIf="requestForm.controls['incomePropertyUrl'].errors">
+                    <div *ngIf="requestForm.controls['incomePropertyUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.documentIncome'|translate}">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.incomePropertyUrl"><a target="_blank" download="download" href="{{filesData.income|authFile}}"><fa-icon [icon]="faPdfFile" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.incomePropertyUrl && !isSaved" (click)="onDeleteFileChange('income')">&xotime;</span>
+                <div class="md:w-1/2 flex justify-end" *ngIf="!isSaved">
+                  <a  target="_blank" href="https://egov.kz/cms/ru/services/pass250_mf" class="comforta cursor-pointer text-sm self-center text-red-500 underline">
+                    Перед подачей заявки необходимо сдать декларацию о доходах заявителю и его супруге/супругу
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!--Сведения о доходах и имуществе-->
+
+          <!--Сведения о трудовой дейтельности-->
+          <div class="form-group text-md md:text-lg py-4">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.documentEmployment'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2 flex" *ngIf="!isSaved">
+                <label for="labor" class="comforta cursor-pointer text-sm light-blue self-center">
+                  {{'SYSTEM.attach'|translate}}
+                </label>
+                <input formControlName="employmentUrl" (change)="onFileChange($event, 'employment')" id="labor" type="file" accept="application/msword,application/pdf" class="invisible">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['employmentUrl'].invalid && (requestForm.controls['employmentUrl'].dirty || requestForm.controls['employmentUrl'].touched)">
+                  <div *ngIf="requestForm.controls['employmentUrl'].errors">
+                    <div *ngIf="requestForm.controls['employmentUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.documentEmployment'|translate}">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.employmentUrl"><a target="_blank" download="download" href="{{filesData.employment|authFile}}"><fa-icon [icon]="faPdfFile" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.employmentUrl && !isSaved" (click)="onDeleteFileChange('employment')">&xotime;</span>
+              </div>
+            </div>
+
+          </div>
+          <!--Сведения о трудовой дейтельности-->
+
+          <!--Сведения о прохождении военной службы-->
+          <div class="form-group text-md md:text-lg py-4">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.documentMilitary'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2 flex" *ngIf="!isSaved">
+                <label for="service" class="comforta cursor-pointer text-sm light-blue self-center">
+                  {{'SYSTEM.attach'|translate}}
+                </label>
+                <input formControlName="millitaryUrl" (change)="onFileChange($event, 'millitary')" id="service" type="file" accept="application/msword,application/pdf" class="invisible">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['millitaryUrl'].invalid && (requestForm.controls['millitaryUrl'].dirty || requestForm.controls['millitaryUrl'].touched)">
+                  <div *ngIf="requestForm.controls['millitaryUrl'].errors">
+                    <div *ngIf="requestForm.controls['millitaryUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.documentMilitary'|translate}">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.millitaryUrl"><a target="_blank" download="download" href="{{filesData.millitary|authFile}}"><fa-icon [icon]="faPdfFile" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.millitaryUrl && !isSaved" (click)="onDeleteFileChange('millitary')">&xotime;</span>
+              </div>
+            </div>
+          </div>
+          <!--Сведения о прохождении военной службы-->
+
+          <!--Анкета для проведения спецпроверки-->
+          <div class="form-group text-md md:text-lg py-4">
+            <p class="comforta cursor-pointer"><label class="required">{{'user.request.documentSpecial'|translate}}</label></p>
+            <div class="md:flex">
+              <div class="md:w-1/2 flex" *ngIf="!isSaved">
+                <label for="anketa" class="comforta cursor-pointer text-sm light-blue self-center">
+                  {{'SYSTEM.attach'|translate}}
+                </label>
+                <input formControlName="specialCheckUrl" (change)="onFileChange($event,'special')" id="anketa" type="file" accept="application/msword,application/pdf" class="invisible">
+                <div class="text-red-500 text-sm" *ngIf="requestForm.controls['specialCheckUrl'].invalid && (requestForm.controls['specialCheckUrl'].dirty || requestForm.controls['specialCheckUrl'].touched)">
+                  <div *ngIf="requestForm.controls['specialCheckUrl'].errors">
+                    <div *ngIf="requestForm.controls['specialCheckUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.documentSpecial'|translate}">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-around">
+                <span class="text-[22px] mr-3" *ngIf="surveyFiles.specialCheckUrl"><a target="_blank" download="download" href="{{filesData.special|authFile}}"><fa-icon [icon]="faPdfFile" class="text-blue-500"></fa-icon></a></span>
+                <span class="cursor-pointer text-red-500" *ngIf="surveyFiles.specialCheckUrl && !isSaved" (click)="onDeleteFileChange('special')">&xotime;</span>
+              </div>
+
+              <div class="md:w-1/2 flex justify-end" *ngIf="!isSaved">
+                <a href="/assets/docs/anketa_example.pdf" download="anketa_example.pdf" class="comforta cursor-pointer text-sm light-blue self-center">{{'SYSTEM.downloadExample'|translate}}</a>
+              </div>
+            </div>
+          </div>
+          <!--Анкета для проведения спецпроверки-->
+
+          <div class="flex items-center my-2">
+            <a *ngIf="!requestForm.controls['agreed'].value" class="ml-2 montserrat cursor-pointer text-blue-600 underline" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">
+              <fa-icon class="mr-2" [icon]="faSquare"></fa-icon>{{'user.request.checkLabel'|translate}}
+            </a>
+            <a *ngIf="requestForm.controls['agreed'].value" class="ml-2 montserrat text-green-700 cursor-pointer">
+              <fa-icon class="mr-2" [icon]="faCheckCircle"></fa-icon>Соглашение подписано
+            </a>
+          </div>
+
+
+        </div>
+      </div>
+      <!--Дополнительные документы-->
+
+      <!--Анкета на близких родственников-->
+      <div class="col-span-12 px-4 my-5 comfortaa">
+        <p class="font-normal text-black my-4 text-xl px-2">{{'user.relatives.title'|translate}}</p>
+        <div class="comforta overflow-x-auto">
+          <table class="min-w-full">
+            <thead class="bg-gray-4 border-solid border-0 border-b border-black">
+            <tr>
+              <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+                {{'user.relatives.fio'|translate}}
+              </th>
+              <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+                {{'user.relatives.status'|translate}}
+              </th>
+              <th scope="col" class="text-md md:text-lg  font-medium text-black px-6 py-4 text-left">
+                {{'user.relatives.birthDate'|translate}}
+              </th>
+              <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+                {{'user.relatives.iin'|translate}}
+              </th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let relItem of surveyRelatives" class="text-left comforta bg-gray-5 border-b transition duration-300 ease-in-out hover:bg-gray-2">
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{relItem.surName}} {{relItem.name}}  {{relItem.patronomic}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{getRelative(relItem.relativeId)|globalTranslate:'title': translate.currentLang}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{relItem.birthDate}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{relItem.iin}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <span *ngIf="!isSaved" class="cursor-pointer" (click)="removeRelative(relItem.iin)">&times;</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-left my-4" *ngIf="!isSaved">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#surveyRelatives" class="rounded-full w-8 h-8 bg-transparent border-2 border-black">
+            <fa-icon class="text-black" [icon]="faPlus"></fa-icon>
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+               id="surveyRelatives" tabindex="-1" aria-labelledby="surveyRelativesExample" aria-hidden="true">
+            <div class="modal-dialog relative w-auto pointer-events-none">
+              <div
+                class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+                <div
+                  class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+                  <h5 class="text-xl font-medium leading-normal text-gray-800" id="surveyRelativesExample"></h5>
+                  <button type="button"
+                          class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                          data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body relative p-4">
+                  <div class="form-group my-4 text-md md:text-lg">
+                    <label for="fio" class="comforta cursor-pointer">{{'user.relatives.fio'|translate}}</label>
+                    <input [ngModelOptions]="{standalone: true}" [(ngModel)]="modalRelatives.fio" id="fio" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                    <span class="text-red-500 my" *ngIf="modalRelatives.fio.split(' ').length < 2">
+                      Заполните имя и фамилию
+                    </span>
+                  </div>
+                  <div class="form-group my-4 text-md md:text-lg" *ngIf="relativeStatus.length > 0">
+                    <label for="relativeStatus" class="comforta cursor-pointer">{{'user.relatives.status'|translate}}</label>
+                    <select [ngModelOptions]="{standalone: true}" [(ngModel)]="modalRelatives.status" id="relativeStatus"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="contract_date">
+                      <option *ngFor="let relative of relativeStatus" value="{{relative.id}}">{{relative.titleRu}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group my-4 text-md md:text-lg">
+                    <label for="relativeBirthday" class="comforta cursor-pointer">{{'user.relatives.birthDate'|translate}}</label>
+                    <input placeholder="дд.мм.гггг" [ngModelOptions]="{standalone: true}" [imask]="imaskDate" [unmask]="true" [(ngModel)]="modalRelatives.birthDate" id="relativeBirthday" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                  </div>
+                  <div class="form-group my-4 text-md md:text-lg">
+                    <label for="relativeIIN" class="comforta cursor-pointer">{{'user.relatives.iin'|translate}}</label>
+                    <input [ngModelOptions]="{standalone: true}" [imask]="{mask: '000-000-000-000'}" [unmask]="true" [(ngModel)]="modalRelatives.iin" id="relativeIIN" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" name="region">
+                  </div>
+                </div>
+                <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                  <button type="button" class="text-white main-blue-bg mt-5 text-sm px-8 py-3 mr-3 rounded hover:bg-blue-700 shadow-md" (click)="addRelative()" data-bs-dismiss="modal" aria-label="Close">
+                    {{'buttons.save'|translate}}
+                  </button>
+                  <button type="button" class="text-white bg-red-color mt-5 text-sm px-8 py-3 ml-3 rounded hover:bg-red-900 shadow-md" data-bs-dismiss="modal" aria-label="Close">
+                    {{'buttons.cancel'|translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Анкета на близких родственников-->
+    </div>
+    <div class="grid grid-cols-12 gap-3 px-4 py-12">
+      <div class="col-span-12 sm:col-span-6 md:col-span-6 text-left">
+        <button type="button" (click)="onBackLocation()" class="w-80 inline text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md">
+          {{'buttons.back'|translate}}
+        </button>
+      </div>
+      <div class="col-span-12 sm:col-span-6 md:col-span-6 text-right">
+        <button class="w-80 inline text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md">
+          {{'buttons.send'|translate}}
+        </button>
+      </div>
+    </div>
+  </form>
+  <!--Форма-->
+
+  </div>
+<!--End User Request-->
+
+<!--Блок подписания согласия-->
+<div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg relative w-auto pointer-events-none">
+    <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+      <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+        <h5 class="text-xl font-medium leading-normal text-gray-800" id="privacyPolicyModalLabel">
+          Согласие на сбор и обработку персональных данных
+        </h5>
+        <button type="button"
+                class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body relative p-4">
+        <p>Настоящим я ,{{currentUser.fullName ?? "Заявитель"}}{{currentUser.iin ? "( ИИН-"+currentUser.iin+")" : ""}}, даю свое согласие Министерству обороны Республики Казахстан (далее – МО РК) осуществлять действия, направленные на накопление, хранение, дополнение, использование, распространение, обезличивание, блокирование и уничтожение персональных данных (далее – сбор и обработка персональных данных) с использованием средств автоматизации и/или без использования таковых, включая, но, не ограничиваясь, запись, копирование, резервное копирование, защиту, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, обезличивание, блокирование, удаление, уничтожение, распространение, доступ, в том числе третьим лицам в случаях, прямо указанных законодательством Республики Казахстан или в настоящем Согласии, которые имеют и/или могут иметь отношение к проведению операций/осуществлению действий/заключению контракта, которые возможно будут заключены между субъектом и МО РК, необходимых для выполнения требований, установленных законодательством Республики Казахстан.</p>
+        <p>1. Сбор и обработка персональных данных Заявителя на бумажных носителях и (или) в электронном формате в информационных системах и (или) любых базах данных Информационных систем Государственных органов осуществляется, в том числе, для следующих целей:</p>
+        <p>1)	оказания Заявителю услуг, по осуществлению поступления на воинскую службу по контракту в Вооруженные Силы, другие войска и воинские формирования Республики Казахстан предусмотренных законодательством Республики Казахстан, которые будут оказаны заявителю МО РК на условиях соответствующих соглашений, для рассмотрения заявки Заявителя; </p>
+        <p>2)	рассмотрения возможности заключения контракта с МО РК, проведения МО РК операций, выполнения МО РК указанных Заявителем действий; </p>
+        <p>3)	выполнения обязанности по надлежащей проверке МО РК Заявителя при установлении рекрутинговых отношений в соответствии с законодательством  Республики Казахстан;</p>
+        <p>4)	выполнения МО РК обязанности по идентификации Заявителя в целях минимизации рисков несанкционированных операций в соответствии с законодательством Республики Казахстан;</p>
+        <p>5)	выполнения МО РК обязанности по хранению документов, материалов, досье установленных нормативными правовыми актами Республики Казахстан;</p>
+        <p>6)	обмена информацией, в том числе, для рассмотрения и(или) проведения специальных проверок, медицинских обследований и т.д.;</p>
+        <p>7)	предоставления (направления) Заявителю любых информационных материалов МО РК, а также иных уведомлений посредством телефонной, факсимильной связи, иных видов связи, а также по открытым каналам связи (в том числе SMS, e-mail, факс, социальные сети и т.п.);</p>
+        <p>8)	иных целей, установленных законодательством Республики Казахстан или международными договорами, ратифицированными Республикой Казахстан.</p>
+        <p>2. Персональными данными Заявителя являются любые относящиеся к Заявителю сведения, зафиксированные на электронном, бумажном или ином материальном носителе, которые могут содержать следующие данные, но, не ограничиваясь: (перечень персональных данных не означает, что Заявитель должен предоставить все свои персональные данные, содержащиеся в перечне. Заявитель должен предоставлять необходимый объем персональных данных, который потребуется МО РК для оказания соответствующей услуги и/или выполнения операции)</p>
+        <p>1)	сведения, необходимые для заполнения анкеты/заявки и надлежащей идентификации формирования досье: фамилия, имя, отчество (при наличии); гражданство; данные документа, удостоверяющего личность; индивидуальный идентификационный номер; дата и данные о рождении; пол; фотоизображение; регистрация по месту жительства/фактического места жительства, место работы и должность; номер телефона (домашний, рабочий, сотовый), адрес электронной почты; информация, содержащаяся в адресной справке; подпись;</p>
+        <p>2)	сведения о семейном/социальном положении: данные свидетельства о заключении брака, фамилия,  имя,  отчество (при наличии) супруга(и), данные документа, удостоверяющего личность  супруга(и);  наличие/отсутствие иждивенцев или иных членов семьи; степень родства, фамилии, имена, отчества и даты рождения других членов семьи, иждивенцев;</p>
+        <p>3)	сведения об образовании, профессиональной деятельности, служебном положении, деловой репутации: образование, профессия, квалификация, должность, данные свидетельства о государственной регистрации индивидуального предпринимателя, данные лицензии на осуществление лицензируемой деятельности, аттестатов, патентов, дипломов, сертификатов; информация о наличии/отсутствии судимости, привлечении к уголовной/административной ответственности;</p>
+        <p>4)	сведения, связанные с оказанием МО РК услуг/выполнением действий: тексты договоров и дополнительных соглашений к ним, заявления, согласия, переписка, указания о проведении операций (прохождение медицинского обследования, прохождения специальной проверки), правоустанавливающие документы;</p>
+        <p>5)	сведения о кредитной истории, сведения, необходимые для оценки платежеспособности: сведения о пенсионных отчислениях, сведения о доходах и расходах, сведения о наличии/отсутствии банковских вкладов, банковских счетов, банковских займов, денег и ценных бумаг, в том числе, находящихся в доверительном управлении и на доверительном хранении; </p>
+        <p>6)	сведения об имуществе (имущественном) положении: сведения об имуществе субъекта и/или имуществе третьих лиц, которое  является обеспечением по банковскому займу, а также об ином (любом) имуществе субъекта, изображение/фотоизображение такого имущества в любом формате и т.д., сведения о наличии/отсутствии  обременений на имущество; идентификационные данные, данные о регистрации, обременении; общие характеристики имущества; стоимость; адрес (место нахождения) имущества, данные государственной регистрации, информация об участии субъекта в капитале юридических лиц – доля участия/количество акций;</p>
+        <p>7)	сведения о цели и характере деловых отношений.</p>
+        <p>3. Настоящим, Заявитель подтверждает, что:</p>
+        <p>1)	смысл и текст настоящего Согласия ему понятен, отсутствуют какие либо обстоятельства, препятствующие для понимания текста Согласия и его подписания; </p>
+        <p>2)	настоящее Согласие не подлежит отзыву в случаях, если это противоречит законодательству Республики Казахстан, либо при наличии неисполненного обязательства перед МО РК;</p>
+        <p>3)	МО РК вправе производить сбор и обработку персональных данных без согласия Заявителя в случаях, установленных законодательством Республики Казахстан, в том числе, в иных организациях для целей проведения любых, не запрещенных законодательством Республики Казахстан;</p>
+        <p>4)	МО РК вправе собирать (получать) персональные данные Заявителя от самого Заявителя и любых третьих лиц, а также передавать персональные данные Заявителя третьим лицам/распространять в общедоступных источниках персональных данных, если это установлено настоящим документом, законодательством Республики Казахстан и требованиями международного права, международных договоров;</p>
+        <p>5)	в случае, если соответствующим договором, заключенным между Заявителем и МО РК, предусмотрена/будет предусмотрена передача Мо РК по открытым каналам связи персональных данных Заявителя, Заявитель осознает риск несанкционированного получения их третьими лицами и принимает на себя такой риск;</p>
+        <p>6)	уведомление Заявителя о получении МО РК от третьих лиц и (или) передаче МО РК персональных данных Заявителя третьим лицам не требуется, такие персональные данные могут собираться (передаваться) и обрабатываться МО РК без уведомления Заявителя;</p>
+        <p>7)	настоящее Согласие является универсальным и предоставляется Заявителю один раз, с целью возможного получения в дальнейшем любой услуги (выполнения операций) МО РК без повторного истребования согласия Заявителя;</p>
+        <p>8)	настоящее Согласие может быть представлено третьим лицам в качестве доказательства о том, что согласие на сбор и обработку персональных данных субъекта было предоставлено Заявителю МО РК.</p>
+        <p>9) настоящее Согласие действительно на весь период проведения работ с заявкой Заявителя.</p>
+        <p>10) В процессе сбора и обработки персональных данных не предполагается какий-либо трансграничной передачи персональных данных</p>
+        <section>
+          <div class="flex items-center my-2">
+            <input type="checkbox" [checked]="agreeStatus" (change)="agreeStatus = !agreeStatus"   class="w-5 h-5 focus:accent-pink-500"  id="confirmation" name="confirmation">
+            <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="confirmation">
+              {{'user.request.checkLabel'|translate}}
+            </label>
+          </div>
+          <div class="w-full text-right" *ngIf="agreeStatus">
+            <button (click)="AgreeWithPrivacy()" data-bs-dismiss="modal" type="checkbox" class="w-80 inline text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md">
+              Подписать ЭЦП
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Блок подписания согласия-->
+</section>

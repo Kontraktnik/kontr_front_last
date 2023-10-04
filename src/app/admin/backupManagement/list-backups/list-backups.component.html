@@ -1,0 +1,65 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+
+    <div class="col-span-12 p-5 text-right">
+
+      <nav class="rounded-md w-full">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/backups" class="text-blue-600 hover:text-blue-700">Администрирование БД</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Резервные данные</li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-span-12 w-full p-5 text-right">
+      <a [routerLink]="'/admin/create-backup'" class="w-80 text-white bg-success-color text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md" >Создать</a>
+
+      <div class="overflow-x-auto" *ngIf="data != null">
+        <table class="min-w-full rounded">
+          <thead class="">
+          <tr class="rounded">
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование файла
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Расширение
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Размер файла
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Дата создания
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Действия
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="montserrat border-b text-center" *ngFor="let item of data">
+            <td class="px-6 py-4">
+              {{item.fileName}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.extension}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.fileSize}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.created | date:"dd.mm.yyyy HH:mm"}}
+            </td>
+            <td class="px-6 py-4">
+              <a download="download" (click)="deleteBackup(item.fullPath)" type="button" class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">Удалить</a>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+  </div>
+</div>

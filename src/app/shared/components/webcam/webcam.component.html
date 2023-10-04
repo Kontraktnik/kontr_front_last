@@ -1,0 +1,12 @@
+<img src="{{ captureImage }}" height="150px">
+
+<webcam
+  [height]="300"
+  [width]="300"
+  [trigger]="triggerObservable"
+  (imageCapture)="handleImage($event)"
+></webcam>
+<div>
+  <label (click)="triggerSnapshot();" class="comforta cursor-pointer text-sm light-blue">Сфотографироваться</label>
+</div>
+

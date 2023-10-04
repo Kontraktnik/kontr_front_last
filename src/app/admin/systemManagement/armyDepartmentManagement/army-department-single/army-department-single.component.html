@@ -1,0 +1,24 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full my-4">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/system-data" class="text-blue-600 hover:text-blue-700">Системные данные</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li><a routerLink="/admin/army-department-list" class="text-blue-600 hover:text-blue-700">Управлене</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Информация по ведомству</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Информация по ведомству</h1>
+    </div>
+    <div class="col-span-12 p-5" *ngIf="(armyDepartment$|async)?.data">
+      <p class="font-bold">Наименование на русском: {{(armyDepartment$|async)?.data?.titleRu}}</p>
+      <p class="font-bold">Наименование на казахском: {{(armyDepartment$|async)?.data?.titleKz}}</p>
+      <p class="font-bold">Наименование на английском: {{(armyDepartment$|async)?.data?.titleEn}}</p>
+
+
+    </div>
+  </div>
+</div>
+

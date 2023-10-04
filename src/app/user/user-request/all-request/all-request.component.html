@@ -1,0 +1,174 @@
+<!--All Requests-->
+<div class="container pt-36 mx-auto h-auto  pb-4 text-center">
+  <h1 class="montserrat-bolder font-bold light-gray-1 text-2xl capitalize px-2">
+    {{'user.allRequests.myRequests'|translate}}
+  </h1>
+  <hr class="w-20 h-0.5 mx-auto">
+
+  <div class="col-span-12 px-4 py-5 mt-14 comfortaa">
+    <div class="comforta overflow-x-auto">
+      <table class="min-w-full">
+        <thead class="bg-gray-1">
+        <tr>
+          <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+            {{'table.applicationNumber'|translate}}
+          </th>
+          <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+            {{'table.date'|translate}}
+          </th>
+          <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+            {{'table.step'|translate}}
+          </th>
+          <th scope="col" class="text-md md:text-lg  font-medium text-black px-6 py-4 text-center">
+            {{'table.status'|translate}}
+          </th>
+          <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-center">
+            {{'table.comments'|translate}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let survey of mySurveys | paginate: {
+              itemsPerPage: pageSize,
+              currentPage: pageIndex,
+              totalItems: totalCount
+          }"
+              routerLink="/user/show-request/{{survey.id}}"
+              class="cursor-pointer comforta tr-box-shadow my-4 shadow-lg bg-white border-b transition duration-300 ease-in-out hover:bg-gray-2">
+          <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+            <a routerLink="/user/show-request/{{survey.id}}">{{'user.allRequests.request'|translate}} № {{survey.id | number : '3.0-0'}}</a>
+          </td>
+          <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+            {{survey.createdAt | date : "dd.MM.yyyy"}}
+          </td>
+            <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <section *ngIf="survey.currentStepId == StepConstant.SpecialStatus && (getActiveProfile(survey)?.confirmedStatus) == 0;else notSpecialCheck">
+                {{'steps.knbProcessing'|translate}}
+              </section>
+              <ng-template #notSpecialCheck>
+                {{survey.currentStep|globalTranslate:'title':translate.currentLang ?? "Сохранено, не отправлено"}}
+              </ng-template>
+
+            </td>
+          <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+            <!--    Отправленная заявка        -->
+            <section *ngIf="survey.currentStepId == StepConstant.SendedStatus">
+              <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+              <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+              <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+            </section>
+            <!--    Отправленная заявка        -->
+            <!--    Принятая в работу         -->
+            <section *ngIf="survey.currentStepId == StepConstant.AcceptedStatus">
+              <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+              <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+              <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+            </section>
+            <!--    Принятая в работу        -->
+            <!--    Спецпроверка         -->
+            <section *ngIf="survey.currentStepId == StepConstant.SpecialStatus">
+              <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+              <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+              <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+            </section>
+            <!--    Спецпроверка        -->
+            <!--    Подготовка мед документов         -->
+            <section *ngIf="survey.currentStepId == StepConstant.PrepareToMedStatus">
+              <div *ngIf="getActiveProfile(survey) as  activeProfile">
+                <div *ngIf="activeProfile.confirmedStatus == 0 && activeProfile.requestedStatus == 1;else confirmedMed">
+                  <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.needToConfirm'|translate}}!</span>
+                  <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+                </div>
+                <ng-template #confirmedMed>
+                  <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+                </ng-template>
+              </div>
+            </section>
+            <!--    Подготовка мед документов        -->
+            <!--    Мед проверка         -->
+            <section *ngIf="survey.currentStepId == StepConstant.MedStatus">
+              <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+              <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+              <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+            </section>
+            <!--    Мед проверка        -->
+            <!--    Подготовка психологических документов         -->
+            <section *ngIf="survey.currentStepId == StepConstant.PrepareToPsychoStatus">
+              <div *ngIf="getActiveProfile(survey) as  activeProfile">
+                <div *ngIf="activeProfile.confirmedStatus == 0 && activeProfile.requestedStatus == 1;else confirmPsycho">
+                  <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.needToConfirm'|translate}}!</span>
+                  <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>                </div>
+                <ng-template #confirmPsycho>
+                  <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+                </ng-template>
+              </div>
+            </section>
+            <!--    Подготовка психологических документов        -->
+            <!--    Психологическая проверка         -->
+            <section *ngIf="survey.currentStepId == StepConstant.PsychoStatus">
+              <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+              <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+              <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+            </section>
+            <!--    Психологическая проверка        -->
+            <!--    Предложение         -->
+            <section *ngIf="survey.currentStepId == StepConstant.SendOfferStatus">
+              <div *ngIf="getActiveProfile(survey) as  activeProfile">
+                <div *ngIf="activeProfile.confirmedStatus == 0 && activeProfile.requestedStatus == 1;else confirmedOffer">
+                  <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.needToConfirm'|translate}}!</span>
+                  <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>                </div>
+                <ng-template #confirmedOffer>
+                  <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+                </ng-template>
+              </div>
+            </section>
+            <!--    Предложение        -->
+            <!--    Предложение         -->
+            <section *ngIf="survey.currentStepId == StepConstant.SigningStatus">
+              <span class="text-red-500" *ngIf="survey.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+              <span  class="text-yellow-500" *ngIf="survey.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+              <span class="text-green-500" *ngIf="survey.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+            </section>
+            <!--    Предложение        -->
+
+          </td>
+          <td class="text-sm md:text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
+            <ng-container *ngIf="survey.profiles != null && survey.profiles.length > 0">
+              <div *ngFor="let prof of survey.profiles">
+                <span *ngIf="prof.stepId == survey.currentStepId">
+                  <span *ngIf="prof.comment != null || prof.stepId != StepConstant.PsychoStatus || prof.stepId != StepConstant.MedStatus">{{prof.comment}}</span>
+                  <span *ngIf="prof.comment == null">
+                    <span *ngIf="survey.currentStep" [translate]="'statuses.deadline'" [translateParams]="{limit: survey.currentStep.dayLimit}">
+
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+      <pagination-controls
+        previousLabel="Prev"
+        nextLabel="Next"
+        [autoHide]="true"
+        [responsive]="true"
+        (pageChange)="onPagerChange($event)"
+      ></pagination-controls>
+    </div>
+  </div>
+
+</div>
+<!--All Requests-->
+

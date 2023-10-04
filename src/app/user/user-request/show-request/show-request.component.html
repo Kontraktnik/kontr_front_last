@@ -1,0 +1,586 @@
+<!--Show Requests-->
+<div class="container mx-auto h-auto pt-44 pb-24 text-center" *ngIf="mySurvey">
+  <h1 class="montserrat-bolder font-bold light-gray-1 text-2xl capitalize px-2">
+    {{'user.allRequests.request'|translate}} № {{mySurvey.id | number : "3.0-0"}}
+  </h1>
+  <hr class="w-20 h-0.5 mx-auto">
+  <section *ngIf="mySurvey.currentStepId;else notSended">
+  <span class="inline-block py-4">
+      <a routerLink="/user/open-request/{{mySurvey.id}}" class="montserrat-bolder light-blue my-4 text-md px-2 underline">
+        {{'SYSTEM.show'|translate}}
+      </a>
+  </span>
+
+  <div class="grid grid-cols-12">
+    <div class="col-span-12 my-4">
+      <ul class='nav nav-wizard' *ngIf="mySurvey.stepGroupId">
+        <li class="my-arrow {{setStepClass(mySurvey, 1)}} w-11/12 sm:w-1/2 md:w-1/5"><a>
+          {{'steps.documentsSent'|translate}}
+        </a></li>
+        <li class="my-arrow {{setStepClass(mySurvey, 2)}} w-11/12 sm:w-1/2 md:w-1/5"><a>
+          {{'steps.acceptedForWork'|translate}}
+        </a></li>
+        <li class="my-arrow {{setStepClass(mySurvey, 3)}} w-11/12 sm:w-1/2 md:w-1/5"><a>{{'steps.knb'|translate}}</a></li>
+        <li class="my-arrow {{setStepClass(mySurvey, 4)}} w-11/12 sm:w-1/2 md:w-1/5"><a>{{'steps.med'|translate}}</a></li>
+        <li class="my-arrow {{setStepClass(mySurvey, 5)}} w-11/12 sm:w-1/2 md:w-1/5"><a>{{'steps.contractSigning'|translate}}</a></li>
+      </ul>
+    </div>
+
+    <div class="col-span-12 my-4 overflow-x-auto">
+      <ul class="step flex md:flex-nowrap">
+        <li *ngFor="let i of [1,2,3,4,5]" class="step-item {{setStepLineClass(mySurvey, i)}}">
+          <a  class="text-white">
+            {{setStepData(mySurvey.profiles, i)|date:"dd.MM.yyyy HH:mm"}}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-span-12 rounded-sm my-5 comfortaa">
+      <div class="comforta overflow-x-auto">
+        <table class="min-w-full bg-gray-2">
+          <thead class="border-solid border-0 border-b border-black">
+          <tr class="text-center">
+            <th scope="col" class="text-md font-medium text-black px-6 py-4">
+              {{'table.applicationNumber'|translate}}
+            </th>
+            <th scope="col" class="text-md font-medium text-black px-6 py-4">
+              {{'table.date'|translate}}
+            </th>
+            <th scope="col" class="text-md  font-medium text-black px-6 py-4">
+              {{'table.step'|translate}}
+            </th>
+            <th scope="col" class="text-md font-medium text-black px-6 py-4">
+              {{'table.status'|translate}}
+            </th>
+            <th scope="col" class="text-md font-medium text-black px-6 py-4">
+              {{'table.comments'|translate}}
+            </th>
+            <th scope="col" class="text-md font-medium text-black px-6 py-4">
+              {{'table.detail'|translate}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngIf="mySurvey.profiles">
+            <tr *ngFor="let prof of mySurvey.profiles" class="comforta border-b transition duration-300 ease-in-out hover:bg-gray-2 text-center border-black">
+              <!--            Номер Заявка-->
+              <td class="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <a routerLink="/user/open-request/{{mySurvey.id}}">{{'user.allRequests.request'|translate}} № {{mySurvey.id | number : "3.0-0"}}</a>
+              </td>
+              <!--            Номер Заявка-->
+              <!--    Дата заявки-->
+              <td class="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{prof.createdAt | date : "dd.MM.yyyy HH:mm"}}
+              </td>
+              <!--    Дата заявки-->
+              <!--    Этап -->
+              <td class="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                <section *ngIf="prof.stepId == StepConstant.SpecialStatus && prof.confirmedStatus == 0;else notSpecialCheck">
+                  {{'steps.knbProcessing'|translate}}
+                </section>
+                <ng-template #notSpecialCheck>
+                  <span *ngIf="prof.step">{{prof.step | globalTranslate: 'title': translate.currentLang}}</span>
+                </ng-template>
+              </td>
+              <!--    Этап -->
+              <!--    Статус -->
+              <td class="text-md text-gray-900 font-light px-6 py-4">
+                <!--    Отправленная заявка        -->
+                <section *ngIf="prof.stepId == StepConstant.SendedStatus">
+                  <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+                </section>
+                <!--    Отправленная заявка        -->
+                <!--    Принятая в работу         -->
+                <section *ngIf="prof.stepId == StepConstant.AcceptedStatus">
+                  <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.applicationReceived'|translate}}</span>
+                </section>
+                <!--    Принятая в работу        -->
+                <!--    Спецпроверка         -->
+                <section *ngIf="prof.stepId == StepConstant.SpecialStatus">
+                  <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.applicationRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.knbReceived'|translate}}</span>
+                </section>
+                <!--    Спецпроверка        -->
+                <!--    Подготовка мед документов         -->
+                <section *ngIf="prof.stepId == StepConstant.PrepareToMedStatus">
+                  <div *ngIf="prof.confirmedStatus == 0 && prof.requestedStatus == 1;else notPreparedMed">
+                    <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.medRejected'|translate}}</span>
+                    <span  class="text-gray-700" *ngIf="prof.status == StepConstant.OnWork">
+                      <a (click)="selectActiveProfile(prof)" class="font-bold underline cursor-pointer text-gray-700" data-bs-toggle="modal" data-bs-target="#showAnswerModal">{{'statuses.needToConfirm'|translate}}</a>
+                    </span>
+                    <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.medReceived'|translate}}</span>
+                  </div>
+                  <ng-template #notPreparedMed>
+                    <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.medRejected'|translate}}</span>
+                    <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                    <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.medReceived'|translate}}</span>
+                  </ng-template>
+                </section>
+                <!--    Подготовка мед документов        -->
+                <!--    Мед проверка         -->
+                <section *ngIf="prof.stepId == StepConstant.MedStatus">
+                  <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.medFinalReceived'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.medFinalReceived'|translate}}</span>
+                </section>
+                <!--    Мед проверка        -->
+                <!--    Подготовка психологических документов         -->
+                <section *ngIf="prof.stepId == StepConstant.PrepareToPsychoStatus">
+                  <div *ngIf="prof.confirmedStatus == 0 && prof.requestedStatus == 1;else notPreparedPsycho">
+                    <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.psychoRejected'|translate}}</span>
+                    <span  class="text-gray-700" *ngIf="prof.status == StepConstant.OnWork">
+                      <a (click)="selectActiveProfile(prof)" class="font-bold underline cursor-pointer text-gray-700" data-bs-toggle="modal" data-bs-target="#showAnswerModal">{{'statuses.needToConfirm'|translate}}</a>
+                    </span>
+<!--                    <span  class="text-gray-700" *ngIf="prof.status == StepConstant.OnWork">-->
+<!--                      Вам нужно дать согласие на прохождение и <br>-->
+<!--                      <a (click)="passPsychoTest(prof.id)" class="font-bold underline cursor-pointer text-gray-700"> прикрепить подтверждающие документы</a>-->
+<!--                    </span>-->
+                    <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.psychoReceived'|translate}}</span>
+                  </div>
+                  <ng-template #notPreparedPsycho>
+                    <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.psychoRejected'|translate}}</span>
+                    <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                    <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.psychoReceived'|translate}}</span>
+                  </ng-template>
+                </section>
+                <!--    Подготовка психологических документов        -->
+                <!--    Психологическая проверка         -->
+                <section *ngIf="prof.stepId == StepConstant.PsychoStatus">
+                  <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.psychoFinalRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.psychoFinalReceived'|translate}}</span>
+                </section>
+                <!--    Психологическая проверка        -->
+                <!--    Предложение         -->
+                <section *ngIf="prof.stepId == StepConstant.SendOfferStatus">
+                  <div *ngIf="prof.confirmedStatus == 0 && prof.requestedStatus == 1;else notOffered">
+                    <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.contractRejected'|translate}}</span>
+                    <span  class="text-gray-700" *ngIf="prof.status == StepConstant.OnWork">
+                      {{'statuses.contractOnWork'|translate}} <br>
+                      <a (click)="selectActiveProfile(prof)" class="font-bold underline cursor-pointer text-gray-700" data-bs-toggle="modal" data-bs-target="#showAnswerModal">{{'statuses.needToConfirm'|translate}}</a>
+                    </span>
+                    <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.contractReceived'|translate}}</span>
+                  </div>
+                  <ng-template #notOffered>
+                    <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.contractRejected'|translate}}</span>
+                    <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                    <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.contractReceived'|translate}}</span>
+                  </ng-template>
+                </section>
+                <!--    Предложение        -->
+                <!--    Предложение         -->
+                <section *ngIf="prof.stepId == StepConstant.SigningStatus">
+                  <span class="text-red-500" *ngIf="prof.status == StepConstant.Rejected">{{'statuses.contractFinalRejected'|translate}}</span>
+                  <span  class="text-yellow-500" *ngIf="prof.status == StepConstant.OnWork">{{'statuses.inWork'|translate}}</span>
+                  <span class="text-green-500" *ngIf="prof.status == StepConstant.Accepted">{{'statuses.contractFinalReceived'|translate}}</span>
+                </section>
+                <!--    Предложение        -->
+              </td>
+              <!--    Статус -->
+
+              <!--    Комментарии -->
+              <td class="text-md text-gray-900 font-light px-6 py-4">
+                <span *ngIf="prof.comment || prof.stepId != StepConstant.PsychoStatus || prof.stepId != StepConstant.MedStatus">{{prof.comment}}</span>
+                <section *ngIf="!prof.comment">
+                  <span *ngIf="prof.status == 0" [translate]="'statuses.deadline'" [translateParams]="{limit: prof.step?.dayLimit}"></span>
+                  <span *ngIf="prof.status == 1" class="text-green-500">Этап пройден</span>
+                  <span *ngIf="prof.status == -1" class="text-red-500">Этап не пройден</span>
+
+                </section>
+              </td>
+              <!--    Комментарии -->
+              <!--    Детали -->
+              <td class="text-md text-gray-900 font-light px-6 py-4">
+                <span>
+                    <a (click)="setCurrentProfile(prof)" data-bs-toggle="modal" data-bs-target="#showProfileModal"  class="font-bold underline cursor-pointer text-gray-700 flex">
+                      <fa-icon class="mx-2" [icon]="faCircleInfo"></fa-icon> <br>
+                      <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+                        <fa-icon class="mx-2" [icon]="faComment"></fa-icon>: {{prof.profileFiles?.length ?? 0}}
+                      </span>
+
+                    </a>
+                </span>
+              </td>
+              <!--    Детали -->
+
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-span-12 text-right">
+      <a class="inline-block text-center w-52 text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900" routerLink="/user/all-request">
+        {{'buttons.back'|translate}}
+      </a>
+    </div>
+    <div class="col-span-12 my-5" *ngIf="mySurvey.status == -1">
+      <small class="w-full">
+        *Отмечаем, что в случае несогласия с ответом государственного органа Вы вправе его обжаловать в соответствии со статьей 89 Административного процедурно-процессуального кодекса.
+      </small>
+    </div>
+  </div>
+  </section>
+  <ng-template #notSended>
+    <app-saved-request (deleteRequest)="deleteRequest($event)" (sendRequest)="sendSavedRequest($event)" [survey]="mySurvey"></app-saved-request>
+  </ng-template>
+
+
+
+  <!-- Модальное окно для просмотра статуса -->
+  <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="showProfileModal" tabindex="-1" aria-labelledby="showProfileModalTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered relative w-auto pointer-events-none">
+      <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+        <div class="justify-center flex modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+          <h5 class="text-xl font-medium leading-normal text-gray-800 text-center" id="showProfileModalScrollable">
+            {{'user.allRequests.requestInfo'|translate}}
+          </h5>
+          <button type="button"
+                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body relative p-4">
+          <div class="w-full">
+            <div class="flex flex-col">
+              <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                  <div class="overflow-hidden">
+                    <table class="min-w-full" *ngIf="currentProfile != null">
+                      <thead class="bg-white border-b">
+                      <tr>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-center">
+                          {{'user.allRequests.requestTitle'|translate}}
+                        </th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-center">
+                          {{'user.allRequests.requestMeaning'|translate}}
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{'table.comments'|translate}}
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" *ngIf="currentProfile.comment != null || currentProfile.stepId != StepConstant.PsychoStatus || currentProfile.stepId != StepConstant.MedStatus">
+                          {{currentProfile?.comment}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{'table.date'|translate}}
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.createdAt |date: 'dd/MM/yyyy H:m'}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{'table.dateOfUpdatedApplication'|translate}}
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.updatedAt |date: 'dd/MM/yyyy H:m'}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{'table.dateOfEndApplication'|translate}}
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.expiredAt |date: 'dd/MM/yyyy H:m'}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100" *ngIf="currentProfile.profileFiles != null && currentProfile.profileFiles.length">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{'table.files'|translate}}
+                          <span class="text-sm inline-block py-1.5 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-600 text-white rounded">{{currentProfile.profileFiles != null ? currentProfile.profileFiles.length :0}}</span>
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          <div class="flex justify-center" *ngFor="let item of currentProfile.profileFiles">
+                            <ul class="bg-white rounded-lg w-96 text-gray-900 my-5 border-t border-b border-black border-2">
+                              <li class="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                                <a target="_blank" href="{{item.file | authFile}}" download  class="cursor-pointer rounded-xl px-6 pt-2.5 pb-2 bg-blue-700 text-white font-medium text-xs inline">
+                                  <fa-icon [icon]="faDownload" class="bg-blue-700"></fa-icon>
+                                </a>
+                              </li>
+                              <li class="px-6 py-2 border-b border-gray-200 w-full">
+                                {{'table.comments'|translate}}:
+                                {{item.comment}}
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+
+          <button type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+            {{'buttons.close'|translate}}
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Модальное окно для просмотра статуса -->
+
+  <!-- Модальное окно для сдачи документов со стороны кандидата -->
+  <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="showAnswerModal" tabindex="-1" aria-labelledby="showAnswerModalTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered relative w-auto pointer-events-none">
+      <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+        <div class="justify-center flex modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md" >
+          <h5 class="text-xl font-medium leading-normal text-gray-800 text-center" id="showAnswerModalScrollable">
+            Дать ответ на текущую заявку
+          </h5>
+          <button type="button"
+                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body relative p-4" *ngIf="activeProfile">
+          <section class="w-full" *ngIf="activeProfile.stepId == StepConstant.PrepareToMedStatus">
+            <div class="text-left">
+
+              <p>Уважаемый кандидат! Вам необходимо явиться в Департамент по делам обороны по месту учета для прохождения медицинской комиссии. При себе необходимо иметь следующие документы: :</p>
+              <p>1.	Удостоверение личности</p>
+              <p>2.	Военный билет</p>
+              <p>3.	Справка со СПИД центра</p>
+              <p>4.	Флюорограмма – в двух проекциях с описанием</p>
+              <p>5.	Результат ЭКГ – в покое и после нагрузки</p>
+              <p>6.	Общие анализы: мочи, крови</p>
+              <p>7.	Рентген пазух носа</p>
+              <p>8.	Снимок стоп</p>
+              <p>9.	Анализ на сахар</p>
+              <p>10.	Анализ крови Маркеры гепатит ВС</p>
+              <p>11.	ЭхоКС (узи сердца)</p>
+            </div>
+<!--            Подготовка к медкомиссии-->
+            <form>
+<!--              &lt;!&ndash;Справка тубдиспансера&ndash;&gt;-->
+<!--              <div class="form-group text-md md:text-lg py-4">-->
+<!--                <div class="md:flex">-->
+<!--                  <div class="md:w-full flex" *ngIf="!medForm.controls['tuberUrl'].value">-->
+<!--                    <label for="tuberUrl" class="comforta cursor-pointer text-sm light-blue self-center px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">-->
+<!--                      {{'SYSTEM.attach'|translate}}-->
+<!--                      Справку с тубдиспансера-->
+<!--                    </label>-->
+<!--                    <input (change)="onFileChange($event,'tuberUrl')" id="tuberUrl" type="file" accept="application/msword,application/pdf" class="invisible">-->
+<!--                    <div class="text-red-500 text-sm" *ngIf="medForm.controls['tuberUrl'].invalid && (medForm.controls['tuberUrl'].dirty || medForm.controls['tuberUrl'].touched)">-->
+<!--                      <div *ngIf="medForm.controls['tuberUrl'].errors">-->
+<!--                        <div *ngIf="medForm.controls['tuberUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.tuberUrl'|translate}">-->
+
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div class="flex justify-around" *ngIf="medForm.controls['tuberUrl'].value">-->
+<!--                    <div class="w-full px-6 pt-2.5 pb-2 bg-green-700 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">-->
+<!--                      <span class="text-[16px] mr-3">Справка с тубдиспансера</span>-->
+<!--                      <span class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['tuberUrl'].value">-->
+<!--                        <a download="download" target="_blank" href="{{medForm.controls['tuberUrl'].value | authFile}}"><fa-icon [icon]="faFile" class="text-blue-500"></fa-icon></a>-->
+<!--                      </span>-->
+<!--                      <span (click)="onDeleteFileChange('tuberUrl')" class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['tuberUrl'].value"><fa-icon [icon]="faTimesCircle" class="text-red-500"></fa-icon></span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;Справка тубдиспансера&ndash;&gt;-->
+<!--              &lt;!&ndash;Справка кожвена&ndash;&gt;-->
+<!--              <div class="form-group text-md md:text-lg py-4">-->
+<!--                <div class="md:flex">-->
+<!--                  <div class="md:w-full flex" *ngIf="!medForm.controls['dermatologUrl'].value">-->
+<!--                    <label for="dermatologUrl" class="comforta cursor-pointer text-sm light-blue self-center px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">-->
+<!--                      {{'SYSTEM.attach'|translate}}-->
+<!--                      Справку с кожвена-->
+<!--                    </label>-->
+<!--                    <input (change)="onFileChange($event,'dermatologUrl')" id="dermatologUrl" type="file" accept="application/msword,application/pdf" class="invisible">-->
+<!--                    <div class="text-red-500 text-sm" *ngIf="medForm.controls['dermatologUrl'].invalid && (medForm.controls['dermatologUrl'].dirty || medForm.controls['dermatologUrl'].touched)">-->
+<!--                      <div *ngIf="medForm.controls['dermatologUrl'].errors">-->
+<!--                        <div *ngIf="medForm.controls['dermatologUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.dermatologUrl'|translate}">-->
+
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="flex justify-around" *ngIf="medForm.controls['dermatologUrl'].value">-->
+<!--                    <div class="w-full px-6 pt-2.5 pb-2 bg-green-700 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">-->
+<!--                      <span class="text-[16px] mr-3">Справка с кожвена</span>-->
+<!--                      <span class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['dermatologUrl'].value">-->
+<!--                        <a download="download" target="_blank" href="{{medForm.controls['dermatologUrl'].value | authFile}}"><fa-icon [icon]="faFile" class="text-blue-500"></fa-icon></a>-->
+<!--                      </span>-->
+<!--                      <span (click)="onDeleteFileChange('dermatologUrl')" class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['dermatologUrl'].value"><fa-icon [icon]="faTimesCircle" class="text-red-500"></fa-icon></span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;Справка кожвена&ndash;&gt;-->
+<!--              &lt;!&ndash;Справка с псих диспансера&ndash;&gt;-->
+<!--              <div class="form-group text-md md:text-lg py-4">-->
+<!--                <div class="md:flex">-->
+<!--                  <div class="md:w-full flex" *ngIf="!medForm.controls['psychoNeurologicalUrl'].value">-->
+<!--                    <label for="psychoNeurologicalUrl" class="comforta cursor-pointer text-sm light-blue self-center px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">-->
+<!--                      {{'SYSTEM.attach'|translate}}-->
+<!--                      Справка с психдиспансера-->
+<!--                    </label>-->
+<!--                    <input (change)="onFileChange($event,'psychoNeurologicalUrl')" id="psychoNeurologicalUrl" type="file" accept="application/msword,application/pdf" class="invisible">-->
+<!--                    <div class="text-red-500 text-sm" *ngIf="medForm.controls['psychoNeurologicalUrl'].invalid && (medForm.controls['psychoNeurologicalUrl'].dirty || medForm.controls['psychoNeurologicalUrl'].touched)">-->
+<!--                      <div *ngIf="medForm.controls['psychoNeurologicalUrl'].errors">-->
+<!--                        <div *ngIf="medForm.controls['psychoNeurologicalUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.psychoNeurologicalUrl'|translate}">-->
+
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="flex justify-around" *ngIf="medForm.controls['psychoNeurologicalUrl'].value">-->
+<!--                    <div class="w-full px-6 pt-2.5 pb-2 bg-green-700 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">-->
+<!--                      <span class="text-[16px] mr-3">Справка с психдиспансера</span>-->
+<!--                      <span class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['psychoNeurologicalUrl'].value">-->
+<!--                        <a download="download" target="_blank" href="{{medForm.controls['psychoNeurologicalUrl'].value | authFile}}"><fa-icon [icon]="faFile" class="text-blue-500"></fa-icon></a>-->
+<!--                      </span>-->
+<!--                      <span (click)="onDeleteFileChange('psychoNeurologicalUrl')" class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['psychoNeurologicalUrl'].value"><fa-icon [icon]="faTimesCircle" class="text-red-500"></fa-icon></span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;Справка с псих диспансера&ndash;&gt;-->
+<!--              &lt;!&ndash;Справка с нарко диспансера&ndash;&gt;-->
+<!--              <div class="form-group text-md md:text-lg py-4">-->
+<!--                <div class="md:flex">-->
+<!--                  <div class="md:w-full flex" *ngIf="!medForm.controls['narcologicalUrl'].value">-->
+<!--                    <label for="narcologicalUrl" class="comforta cursor-pointer text-sm light-blue self-center px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">-->
+<!--                      {{'SYSTEM.attach'|translate}}-->
+<!--                      Справка с наркодиспансера-->
+<!--                    </label>-->
+<!--                    <input (change)="onFileChange($event,'narcologicalUrl')" id="narcologicalUrl" type="file" accept="application/msword,application/pdf" class="invisible">-->
+<!--                    <div class="text-red-500 text-sm" *ngIf="medForm.controls['narcologicalUrl'].invalid && (medForm.controls['narcologicalUrl'].dirty || medForm.controls['narcologicalUrl'].touched)">-->
+<!--                      <div *ngIf="medForm.controls['narcologicalUrl'].errors">-->
+<!--                        <div *ngIf="medForm.controls['narcologicalUrl'].errors.required" [translate]="'validates.rules.required'" [translateParams]="{value: 'user.request.narcologicalUrl'|translate}">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="flex justify-around" *ngIf="medForm.controls['narcologicalUrl'].value">-->
+<!--                    <div class="w-full px-6 pt-2.5 pb-2 bg-green-700 text-white font-medium text-xs leading-normal uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out flex align-center">-->
+<!--                      <span class="text-[16px] mr-3">Справка с наркодиспансера</span>-->
+<!--                      <span class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['narcologicalUrl'].value">-->
+<!--                        <a download="download" target="_blank" href="{{medForm.controls['narcologicalUrl'].value | authFile}}"><fa-icon [icon]="faFile" class="text-blue-500"></fa-icon></a>-->
+<!--                      </span>-->
+<!--                      <span (click)="onDeleteFileChange('narcologicalUrl')" class="text-[16px] mr-3 cursor-pointer" *ngIf="medForm.controls['narcologicalUrl'].value"><fa-icon [icon]="faTimesCircle" class="text-red-500"></fa-icon></span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;Справка с нарко диспансера&ndash;&gt;-->
+              <div class="w-full md:flex justify-between">
+                <button
+                  (click)="passMed(activeProfile.id,-1)"
+                  type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2">
+                  Отказаться
+                </button>
+                <button
+                  (click)="passMed(activeProfile.id,1)"
+                  type="button"
+                  [disabled]="(medForm.invalid ? true : false)"
+                  class="text-white main-blue-bg mt-5 text-sm px-8 py-3 disabled:bg-gray-400 rounded hover:bg-blue-700 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+                  Принять
+                </button>
+              </div>
+            </form>
+            <!--            Подготовка к медкомиссии-->
+
+          </section>
+
+          <section class="w-full" *ngIf="activeProfile.stepId == StepConstant.PrepareToPsychoStatus">
+            <div class="text-left">
+              <p>Уважаемый кандидат! Вам необходимо явиться в Департамент по делам обороны по месту учета для прохождения психологического тестирования. При себе необходимо иметь следующие документы:</p>
+              <p>1.	Удостоверение личности</p>
+              <p>2.	Военный билет</p>
+            </div>
+            <!--            Подготовка к тестированию-->
+            <form>
+
+              <div class="w-full md:flex justify-between">
+                <button
+                  (click)="passMed(activeProfile.id,-1)"
+                  type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2">
+                  Отказаться
+                </button>
+                <button
+                  (click)="passPsychoTest(activeProfile.id,1)"
+                  type="button"
+                  class="text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+                  Принять
+                </button>
+              </div>
+            </form>
+            <!--            Подготовка к тестированию-->
+          </section>
+
+          <section class="w-full" *ngIf="activeProfile.stepId == StepConstant.SendOfferStatus">
+            <div class="text-left">
+              <p>
+                Уважаемый кандидат! Вам необходимо ознакомиться с предлагаемым контрактом и в случае согласия со всеми условиями подписать с помощью ЭЦП. Контракт прикреплен в разделе «Детали»
+              </p>
+            </div>
+            <!--            Предложение вакантной должности-->
+            <form>
+
+              <div class="w-full md:flex justify-between">
+                <button
+                  (click)="signOffer(activeProfile.id,-1)"
+                  type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2">
+                  Отказаться
+                </button>
+                <button
+                  (click)="signOffer(activeProfile.id,1)"
+                  type="button"
+                  class="text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+                  Принять
+                </button>
+              </div>
+            </form>
+            <!--            Предложение вакантной должности-->
+          </section>
+        </div>
+        <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+
+          <button type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+            {{'buttons.close'|translate}}
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для сдачи документов со стороны кандидата -->
+
+
+</div>
+<!--Show Requests-->
+
+

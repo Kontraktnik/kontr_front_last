@@ -1,0 +1,202 @@
+<section class="py-24">
+  <div class="container bg-white rounded-lg mx-auto h-auto py-24 py-4 text-center px-4">
+
+    <h1 class="montserrat font-bold light-gray-1 text-2xl px-2">Статистика заявок</h1>
+    <div class="grid grid-cols-12 gap-4 mt-14 px-4">
+      <!--      Army Rank-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="armyRanks"
+          [searchKeyword]="keyword"
+          placeholder="Звания подающего"
+          (selected)='selectArmyRankEvent($event)'
+          (inputCleared)="isClosedArmyRankAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Position-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="position"
+          [searchKeyword]="keyword"
+          placeholder="Позиция подающего"
+          (selected)='selectPositionEvent($event)'
+          (inputCleared)="isClosedPositionAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Education-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="educations"
+          [searchKeyword]="keyword"
+          placeholder="Образование подающего"
+          (selected)='selectEducationEvent($event)'
+          (inputCleared)="isClosedEducationAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Vtsh-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="vtsh"
+          [searchKeyword]="keyword"
+          placeholder="Прохождение ВТШ подающего"
+          (selected)='selectVtshEvent($event)'
+          (inputCleared)="isClosedVtshAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Executor-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="executors"
+          [searchKeyword]="'fullName'"
+          placeholder="ФИО исполнителя"
+          (selected)='selectExecutorEvent($event)'
+          (inputCleared)="isClosedExecutorAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.fullName"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="grid grid-cols-12 gap-4 px-4">
+
+     <div class="col-span-12 my-10 text-right">
+       <button (click)="exportToPdf()" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Экспортировать отчет в PDF</button>
+       <div class="px-5" id="pdfTable" #pdfTable>
+         <table class="table-fixed w-full text-left px-5" *ngIf="steps">
+           <thead>
+           <tr>
+             <th class="py-5">Этап</th>
+             <th class="py-5 text-center">Кол-во</th>
+             <th class="py-5">Показатели</th>
+           </tr>
+           </thead>
+           <tbody *ngIf="data">
+           <tr>
+             <td class="py-5 font-bold">
+               Всего
+             </td>
+             <td class="py-5 text-center">
+               {{data.count ?? 0}}
+             </td>
+             <td class="py-5">
+               <div class="flex justify-between mb-1 mt-4">
+                 <span class="text-base font-medium text-red-700 dark:text-white">Отказано</span>
+                 <span class="text-sm font-medium text-red-700 dark:text-white">
+                 {{(data.count != 0 ? ((countAllStepStats(-1))/data.count * 100) : 0) | number}} %
+               </span>
+               </div>
+               <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                 <div class="bg-red-600 h-2.5 rounded-full" [style]="'width:' + (data.count != 0 ? ((countAllStepStats(-1))/data.count * 100) : 0)+'%'"></div>
+               </div>
+               <div class="flex justify-between mb-1 mt-4">
+                 <span class="text-base font-medium text-blue-700 dark:text-white">В работе</span>
+                 <span class="text-sm font-medium text-blue-700 dark:text-white">
+                 {{(data.count != 0 ? ((countAllStepStats(0))/data.count * 100) : 0) | number}} %
+               </span>
+               </div>
+               <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                 <div class="bg-blue-600 h-2.5 rounded-full" [style]="'width:' + (data.count != 0 ? ((countAllStepStats(-1))/data.count * 100) : 0)+'%'"></div>
+               </div>
+               <div class="flex justify-between mb-1 mt-4">
+                 <span class="text-base font-medium text-green-700 dark:text-white">Утверждено</span>
+                 <span class="text-sm font-medium text-green-700 dark:text-white">
+                 {{(data.count != 0 ? ((countAllStepStats(1))/data.count * 100) : 0) | number}} %
+               </span>
+               </div>
+               <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-green-700">
+                 <div class="bg-green-600 h-2.5 rounded-full" [style]="'width:' + (data.count != 0 ? ((countAllStepStats(1))/data.count * 100) : 0)+'%'"></div>
+               </div>
+             </td>
+           <tr *ngFor="let step of steps">
+             <td class="py-5 font-bold">
+               {{step.titleRu}}
+             </td>
+             <td class="py-5 text-center">
+               {{countByStep(step.id)}}
+             </td>
+             <td class="py-5">
+               <div class="flex justify-between mb-1 mt-4">
+                 <span class="text-base font-medium text-red-700 dark:text-white">Отказано</span>
+                 <span class="text-sm font-medium text-red-700 dark:text-white">
+                 {{(countByStep(step.id) != 0 ? ((countByStepStats(step.id,-1))/countByStep(step.id) * 100) : 0) | number}} %
+               </span>
+               </div>
+               <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                 <div class="bg-red-600 h-2.5 rounded-full" [style]="'width:' + (countByStep(step.id) != 0 ? ((countByStepStats(step.id,-1))/countByStep(step.id) * 100) : 0)+'%'"></div>
+               </div>
+               <div class="flex justify-between mb-1 mt-4">
+                 <span class="text-base font-medium text-blue-700 dark:text-white">В работе</span>
+                 <span class="text-sm font-medium text-blue-700 dark:text-white">
+                 {{(countByStep(step.id) != 0 ? ((countByStepStats(step.id,0))/countByStep(step.id) * 100) : 0) | number}} %
+               </span>
+               </div>
+               <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                 <div class="bg-blue-600 h-2.5 rounded-full" [style]="'width:' + (countByStep(step.id) != 0 ? ((countByStepStats(step.id,0))/countByStep(step.id) * 100) : 0)+'%'"></div>
+               </div>
+               <div class="flex justify-between mb-1 mt-4">
+                 <span class="text-base font-medium text-green-700 dark:text-white">Утверждено</span>
+                 <span class="text-sm font-medium text-green-700 dark:text-white">
+                 {{(countByStep(step.id) != 0 ? ((countByStepStats(step.id,1))/countByStep(step.id) * 100) : 0) | number}} %
+               </span>
+               </div>
+               <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-green-700">
+                 <div class="bg-green-600 h-2.5 rounded-full" [style]="'width:' + (countByStep(step.id) != 0 ? ((countByStepStats(step.id,1))/countByStep(step.id) * 100) : 0)+'%'"></div>
+               </div>
+
+             </td>
+           </tr>
+           </tbody>
+         </table>
+       </div>
+     </div>
+
+    </div>
+  </div>
+
+
+</section>
+
+
+

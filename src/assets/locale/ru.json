@@ -1,0 +1,175 @@
+{
+  "SYSTEM": {
+    "welcome": "Добро пожаловать",
+    "login": "Войти",
+    "logout": "Выйти",
+    "navTitle": "Сервис по приему на воинскую службу по контракту",
+    "show": "Просмотр",
+    "yes": "Да",
+    "no": "Нет",
+    "select": "Выберите",
+    "selectAll": "Выбрать все",
+    "deleteAll": "Убрать все",
+    "attach": "Прикрепить",
+    "submitDeclaration": "Сдать декларацию",
+    "downloadExample": "Скачать пример",
+    "search": "Поиск",
+    "all": "Все"
+  },
+  "validates": {
+    "rules": {
+      "required": "Поле {{value}} обязательно для заполнения",
+      "format": "Неправильный формат"
+    }
+  },
+  "sidebar": {
+    "allRequests": "Заявки",
+    "reports": "Отчет",
+    "allQueries": "Все запросы"
+  },
+  "navbar": {
+    "vacancies": "Вакансии",
+    "applyRequest": "Подать заявку",
+    "myRequests": "Мои заявки",
+    "received": "Поступившие",
+    "agreement": "Согласование",
+    "signed": "Подписанные",
+    "rejected": "Отклоненные"
+  },
+  "table": {
+    "applicationNumber": "Номер заявки",
+    "fio": "ФИО",
+    "step": "Этап",
+    "requestStatus": "Статус запроса",
+    "responseStatus": "Статус ответа",
+    "dateOfApplication": "Дата подачи",
+    "dateOfUpdatedApplication": "Дата обновления",
+    "dateOfEndApplication": "Дата окончания",
+    "status": "Статус",
+    "action": "Действие",
+    "comments": "Комментарий",
+    "date": "Дата",
+    "detail": "Детали",
+    "files": "Подцепленные файлы"
+  },
+  "statuses": {
+    "requestSent": "Запрос отправлен",
+    "requestCanceled": "Запрос отменен",
+    "requestNotSent": "Запрос не отправлен",
+    "requestDenied": "Запрос отклонен",
+    "confirmationRequired": "Требуется подтверждение",
+    "requestAccepted": "Запрос принят",
+    "denied": "Отказано",
+    "approved": "Утверждено",
+    "applicationRejected": "Заявка отклонена",
+    "inWork": "В работе",
+    "applicationReceived": "Заявка принята",
+    "needToConfirm": "Необходимо дать подтверждение!",
+    "deadline": "Срок обработки заявки до {{limit}} рабочих дней",
+    "knbReceived": "Спецпроверка пройдена",
+    "medRejected": "Подготовка к медобследованию отклонено",
+    "medReceived": "Документы отправлены на медобследование",
+    "medFinalRejected": "Медобследование не пройдено",
+    "medFinalReceived": "Медобследование пройдено",
+    "psychoRejected": "Подготовка к психологическому тестированию отклонено",
+    "psychoReceived": "Документы отправлены на психологическое тестирование",
+    "psychoFinalRejected": "Психологическая проверка не пройдена",
+    "psychoFinalReceived": "Психологическая проверка пройдена",
+    "contractRejected": "Заявление отклонено",
+    "contractReceived": "Заявление отправлено на подписание",
+    "contractOnWork": "Поздравляем! Вы успешно прошли отбор на вакантную должность.",
+    "contractFinalRejected": "Заявка отклонена",
+    "contractFinalReceived": "Заявка успешно подписана"
+
+  },
+  "steps": {
+    "documentsSent": "Документы отправлены",
+    "acceptedForWork": "Принято в работу",
+    "knbProcessing": "Спецпроверка в работе",
+    "knb": "Спецпроверка",
+    "med": "Обследование",
+    "contractSigning": "Подписание контракта"
+  },
+  "buttons": {
+    "save": "Сохранить",
+    "reset": "Сбросить",
+    "send": "Отправить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "cancel": "Отменить",
+    "back": "Назад",
+    "close": "Закрыть"
+  },
+  "user": {
+    "request": {
+      "title": "Подача Заявки На Военную Службу По Контракту",
+      "newRequest": "Новая заявка",
+      "surveyUser": "Анкета кандидата",
+      "fio": "Ф.И.О",
+      "birthArea": "Место жительства",
+      "area": "Область",
+      "city": "Район",
+      "region": "Населенный пункт (город/поселок/село)",
+      "street": "Улица/микрорайон",
+      "home": "Дом",
+      "apartment": "Квартира",
+      "iin": "ИИН",
+      "education": "Образование",
+      "driverLicense": "Наличие водительского удостоверения",
+      "experience": "Опыт работы",
+      "military": "Отношение к воинской службе:",
+      "isServed": "Прохождение воинской службы",
+      "servedArmyNumber": "Номер воинской части",
+      "positionName": "Должность",
+      "armyRank": "Воинское звание",
+      "isVtsh": "Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва:",
+      "vtshName": "Наименование филиала",
+      "vtshYear": "Год обучения",
+      "vacancyTitle": "Указать должность, на какую планирует поступить:",
+      "vacancyName": "Наименование должности/вакансия",
+      "vacancyRegion": "Область",
+      "contractYear": "Срок заключения контракта",
+      "phone": "Телефон",
+      "email": "Электронная почта",
+      "documents": "Дополнительные документы",
+      "photo": "Фото",
+      "autoBio": "Автобиография",
+      "documentEducation": "Документ об образовании с приложением",
+      "documentIncome": "Сведения о доходах и имуществе",
+      "documentEmployment": "Трудовая книжка",
+      "documentMilitary": "Сведения о прохождении военной службы",
+      "documentSpecial": "Анкета для проведения спецпроверки",
+      "checkLabel": "Я, даю согласие на сбор и обработку своих Персональных данных"
+    },
+    "relatives": {
+      "title": "Анкета на близких родственников",
+      "fio": "ФИО",
+      "status": "Статус",
+      "birthDate": "Год рождения",
+      "iin": "ИИН"
+    },
+    "allRequests": {
+      "myRequests": "Мои заявки",
+      "request": "Заявка",
+      "requestInfo": "Информация о заявке",
+      "requestTitle": "Наименование",
+      "requestMeaning": "Значение"
+    }
+  },
+  "director": {},
+  "executor": {},
+  "knb": {},
+  "med": {},
+  "admin": {},
+  "front": {
+    "vacancies": {
+      "searchVacancy": "ПОИСК ВАКАНСИЙ",
+      "positions": "Должность",
+      "newVacancies": "Свежие вакансии",
+      "armyRegions": "Региональные <br> командования",
+      "armyTypes": "Органы военного <br> управления",
+      "areas": "Регионы"
+    }
+  }
+
+}

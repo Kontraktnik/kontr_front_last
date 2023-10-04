@@ -1,0 +1,120 @@
+<div class="container mx-auto py-14">
+  <div class="shadow-lg bg-white rounded h-full" *ngIf="data != null">
+    <div class="overflow-x-auto">
+      <div class="overflow-x-auto">
+        <table class="min-w-full rounded">
+          <thead class="bg-white border-b light-blue-bg-2">
+          <tr class="rounded">
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Номер заявки
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              ФИО
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Этап
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Статус запроса
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Статус Ответа
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Дата подачи
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Статус
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Действие
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Информация
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="even-table montserrat border-b text-center" *ngFor="let profile of data.data | paginate : {
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.pageIndex,
+                  totalItems: data.count
+            };">
+            <td class="px-6 py-4">
+              №{{profile.surveyId}}
+            </td>
+            <td class="px-6 py-4">
+              {{profile.survey?.fullName}}
+            </td>
+            <td class="px-6 py-4">
+              {{profile.step?.titleRu}}
+            </td>
+            <td class="px-6 py-4">
+             <div *ngIf="profile.requestedStatus == -1">
+               <p class="text-red-500">Запрос отменен</p>
+             </div>
+              <div *ngIf="profile.requestedStatus == 0">
+                <p class="text-indigo-600">Запрос не отправлен</p>
+              </div>
+              <div *ngIf="profile.requestedStatus == 1">
+                <p class="text-green-500">Запрос отправлен</p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div *ngIf="profile.confirmedStatus == -1">
+                <p class="text-red-500">Запрос отклонен</p>
+              </div>
+              <div *ngIf="profile.confirmedStatus == 0">
+                <p class="text-indigo-600">В работе</p>
+              </div>
+              <div *ngIf="profile.confirmedStatus == 1">
+                <p class="text-green-500">Запрос принят</p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              {{profile.createdAt |date: 'dd/MM/yyyy HH:mm'}}
+            </td>
+            <td class="px-6 py-4">
+              <select id="education" (change)="addExecutor(profile.surveyId,$event.target);"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" name="executor">
+                <option [value]="-1">Выберите исполнителя</option>
+                <option [value]="user?.id" *ngFor="let user of getAreaExecutor(profile.areaId??0)">
+                  {{user?.fullName}}
+                </option>
+              </select>
+            </td>
+            <td class="px-6 py-4">
+              <div *ngIf="executors.hasOwnProperty(profile.surveyId)">
+                <a class="underline cursor-pointer" (click)="confirmSendedDocument(profile.surveyId,profile.id)">
+                  Распределить
+                </a>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div>
+                <a [routerLink]="'/director/dossier/'+ profile.surveyId +'/' + profile.id" class="underline cursor-pointer">
+                  Просмотр
+                </a>
+              </div>
+            </td>
+          </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="py-8 text-center">
+      <div class="flex justify-center my-4">
+        <pagination-controls
+          previousLabel="Prev"
+          nextLabel="Next"
+          [autoHide]="true"
+          [responsive]="true"
+          (pageChange)="onPagerChange($event)"
+        ></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+
+

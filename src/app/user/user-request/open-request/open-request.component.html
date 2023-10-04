@@ -1,0 +1,303 @@
+<!--User Request-->
+<div class="container mx-auto h-auto pt-56 pb-24 text-center" *ngIf="currentUser && survey">
+  <h1 class="montserrat-bolder font-bold light-gray-1 text-2xl capitalize px-2">{{'user.request.title'|translate}}</h1>
+  <hr class="w-2/3 h-0.5 mx-auto">
+  <h2 class="montserrat-bolder light-gray-1 my-4 text-xl px-2">{{'user.allRequests.request'|translate}} № {{survey.id | number:"3.0-0"}}</h2>
+
+  <div class="grid grid-cols-12 gap-3 mt-14 px-4 bg-gray-4 py-12">
+    <!--Анкета-->
+    <div class="col-span-12 md:col-span-6 px-4">
+      <p class="comforta font-normal text-black my-4 text-xl px-2">{{'user.request.surveyUser'|translate}}</p>
+      <div class="text-left">
+        <!--ФИО-->
+        <div class="form-group my-4 text-md md:text-lg">
+          <label for="name" class="comforta cursor-pointer">{{'user.request.fio'|translate}}</label>
+          <input id="name" type="text" class="my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="name" value="{{currentUser.fullName}}">
+        </div>
+        <!--ФИО-->
+        <!--Место жительства-->
+        <div class="form-group my-4 text-md md:text-lg">
+          <label class="comforta cursor-pointer">{{'user.request.birthArea'|translate}}</label>
+          <input value="{{survey.birthArea?.titleRu}} {{survey.region}} {{survey.city}} {{survey.street}} {{survey.home}} {{survey.appartment}}" id="address" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled name="address"/>
+        </div>
+        <!--Место жительства-->
+        <!--ФИО-->
+        <div class="form-group my-4 text-md md:text-lg">
+          <label for="iin" class="comforta cursor-pointer">{{'user.request.iin'|translate}}</label>
+          <input id="iin" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="iin" value="{{currentUser.iin}}">
+        </div>
+        <!--ФИО-->
+
+        <!--Образование-->
+        <div class="form-group my-4 text-md md:text-lg" *ngIf="survey.education">
+          <label for="education" class="comforta cursor-pointer">{{'user.request.education'|translate}}</label>
+          <input value="{{survey.education | globalTranslate: 'title': translate.currentLang}}" id="education" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled name="education" />
+        </div>
+        <!--Образование-->
+
+        <!--Наличие водительского удостоверения-->
+        <div class="form-group my-4 text-md md:text-lg">
+          <label for="driver_license" class="comforta cursor-pointer">{{'user.request.driverLicense'|translate}}</label>
+          <input value="{{getDriverLicenses(survey.surveyDrivers??[])}}" id="driver_license" class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled  name="driver_license" />
+        </div>
+        <!--Наличие водительского удостоверения-->
+
+        <!--Опыт работы	-->
+        <div class="form-group my-4 text-md md:text-lg">
+          <label for="experience" class="comforta cursor-pointer">{{'user.request.experience'|translate}}</label>
+          <input id="experience" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="experience" *ngIf="survey.experienced" [value]="'SYSTEM.yes'|translate">
+          <input id="experience" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="experience" *ngIf="!survey.experienced" [value]="'SYSTEM.no'|translate">
+        </div>
+        <!--Опыт работы	-->
+
+        <p class="comforta text-md md:text-lg">{{'user.request.military'|translate}}</p>
+        <!--1)	Прохождение воинской службы	-->
+        <div *ngIf="survey.served" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="service_year" class="comforta cursor-pointer">1)	{{'user.request.isServed'|translate}}</label>
+          <input id="service_year" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="service_year" *ngIf="survey.served" [value]="'SYSTEM.yes'|translate">
+          <input id="service_year" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="service_year" *ngIf="!survey.served" [value]="'SYSTEM.no'|translate">
+        </div>
+        <!--1)	Прохождение воинской службы-->
+
+        <!--Номер воинской части 	-->
+        <div *ngIf="survey.served" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="army_number" class="comforta cursor-pointer">{{'user.request.servedArmyNumber'|translate}} </label>
+          <input id="army_number" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="army_number" value="{{survey.servedArmyNumber}}">
+        </div>
+        <!--Номер воинской части -->
+
+        <!--Должность  	-->
+        <div *ngIf="survey.served" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="position" class="comforta cursor-pointer">{{'user.request.positionName'|translate}}</label>
+          <input id="position" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="position" value="{{survey.positionName}}">
+        </div>
+        <!--Должность  -->
+
+        <!--Воинское звание  	-->
+        <div *ngIf="survey.served" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="army_position" class="comforta cursor-pointer">{{'user.request.armyRank'|translate}}</label>
+          <input *ngIf="survey.armyRank" id="army_position" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="army_position" value="{{survey.armyRank | globalTranslate: 'title': translate.currentLang}}">
+        </div>
+        <!--Воинское звание  -->
+
+        <!--2)	Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва: 	-->
+        <div *ngIf="survey.vtShServed" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="vtsh" class="comforta cursor-pointer">
+            2)	{{'user.request.isVtsh'|translate}}
+          </label>
+          <input id="vtsh" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vtsh" *ngIf="survey.vtShServed" [value]="'SYSTEM.yes'|translate">
+          <input id="vtsh" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vtsh" *ngIf="!survey.vtShServed" [value]="'SYSTEM.no'|translate">
+        </div>
+        <!--2)	Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва: 	-->
+
+        <!--Наименование филиала 	-->
+        <div *ngIf="survey.vtShServed" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="vtsh_name" class="comforta cursor-pointer">{{'user.request.vtshName'|translate}}</label>
+          <input *ngIf="survey.vtSh" id="vtsh_name" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vtsh_name" value="{{survey.vtSh | globalTranslate: 'title': translate.currentLang}}">
+        </div>
+        <!--Наименование филиала 	-->
+
+        <!--Год обучения 	-->
+        <div *ngIf="survey.vtShServed" class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="education_year" class="comforta cursor-pointer">{{'user.request.vtshYear'|translate}}</label>
+          <input id="education_year" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="education_year" value="{{survey.vtShYear}}">
+        </div>
+        <!--Год обучения 	-->
+
+        <p class="comforta text-md md:text-lg">
+          {{'user.request.vacancyTitle'|translate}}
+        </p>
+        <!--Наименование должности/вакансия  	-->
+        <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="survey.position">
+          <label for="vacancy" class="comforta cursor-pointer">{{'user.request.vacancyName'|translate}} </label>
+          <input id="vacancy" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vacancy" value="{{survey.position | globalTranslate: 'title': translate.currentLang}}">
+        </div>
+        <!--Наименование должности/вакансия  	-->
+
+        <!--Срок заключения контракта-->
+        <div class="form-group my-4 text-md md:text-lg">
+          <label for="contract_date" class="comforta cursor-pointer">{{'user.request.contractYear'|translate}}</label>
+          <input id="contract_date"  class="my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled name="contract_date" value="{{survey.contractYear}}" />
+        </div>
+        <!--Срок заключения контракта-->
+
+        <!--Регион  	-->
+        <div class="form-group mt-2 mb-4 text-md md:text-lg" *ngIf="survey.area">
+          <label for="region" class="comforta cursor-pointer">{{'user.request.vacancyRegion'|translate}}</label>
+          <input id="region" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="region" value="{{survey.area | globalTranslate: 'title': translate.currentLang}}">
+        </div>
+        <!--Регион  	-->
+
+        <!--Телефон  	-->
+        <div class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="phone" class="comforta cursor-pointer">{{'user.request.phone'|translate}}</label>
+          <input id="phone" type="text" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="phone" value="{{currentUser.phone}}">
+        </div>
+        <!--Телефон  	-->
+
+        <!--Электронная почта  	-->
+        <div class="form-group mt-2 mb-4 text-md md:text-lg">
+          <label for="email" class="comforta cursor-pointer">{{'user.request.email'|translate}}</label>
+          <input id="email" type="email" class=" my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="email" value="{{currentUser.email}}">
+        </div>
+        <!--Электронная почта  	-->
+
+
+      </div>
+
+    </div>
+    <!--Анкета-->
+    <!--Дополнительные документы-->
+    <div class="col-span-12 md:col-span-6 px-4">
+      <p class="comforta font-normal text-black my-4 text-xl px-2">{{'user.request.documents'|translate}}</p>
+      <div class="text-left">
+
+        <!--Фото-->
+        <div class="form-group text-md md:text-lg">
+          <p class="comforta">{{'user.request.photo'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-1/2">
+              <a (click)="setCurrentFile(survey.imageUrl)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFileImage"></fa-icon></a>
+            </div>
+          </div>
+
+        </div>
+        <!--Фото-->
+
+        <!--Автобиография-->
+        <div class="form-group text-md md:text-lg py-4">
+          <p class="comforta">{{'user.request.autoBio'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-1/2 flex">
+              <a (click)="setCurrentFile(survey.autoBiography)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFileWord"></fa-icon></a>
+            </div>
+          </div>
+
+        </div>
+        <!--Автобиография-->
+
+        <!--Документ об образовании с приложением-->
+        <div class="form-group text-md md:text-lg py-4">
+          <p class="comforta">{{'user.request.documentEducation'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-1/2 flex">
+              <a (click)="setCurrentFile(survey.educationUrl)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFilePdf"></fa-icon></a>
+            </div>
+          </div>
+
+        </div>
+        <!--Документ об образовании с приложением-->
+
+        <!--Сведения о доходах и имуществе-->
+        <div class="form-group text-md md:text-lg py-4">
+          <p class="comforta">{{'user.request.documentIncome'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-full flex">
+              <a (click)="setCurrentFile(survey.incomePropertyUrl)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFilePdf"></fa-icon></a>
+            </div>
+          </div>
+
+        </div>
+        <!--Сведения о доходах и имуществе-->
+
+        <!--Сведения о трудовой дейтельности-->
+        <div class="form-group text-md md:text-lg py-4">
+          <p class="comforta">{{'user.request.documentEmployment'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-full flex">
+              <a (click)="setCurrentFile(survey.employmentUrl)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFilePdf"></fa-icon></a>
+            </div>
+          </div>
+
+        </div>
+        <!--Сведения о трудовой дейтельности-->
+
+        <!--Сведения о прохождении военной службы-->
+        <div class="form-group text-md md:text-lg py-4">
+          <p class="comforta">{{'user.request.documentMilitary'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-full flex">
+              <a (click)="setCurrentFile(survey.millitaryUrl)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFilePdf"></fa-icon></a>
+            </div>
+          </div>
+        </div>
+        <!--Сведения о прохождении военной службы-->
+
+        <!--Анкета для проведения спецпроверки-->
+        <div class="form-group text-md md:text-lg py-4">
+          <p class="comforta">{{'user.request.documentSpecial'|translate}}</p>
+          <div class="md:flex">
+            <div class="md:w-1/2 flex">
+              <a (click)="setCurrentFile(survey.employmentUrl)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer"><fa-icon class="light-blue" [icon]="faFileAlt"></fa-icon></a>
+            </div>
+          </div>
+        </div>
+        <!--Анкета для проведения спецпроверки-->
+
+        <div class="flex items-center my-2">
+          <input type="checkbox" class="w-5 h-5 focus:accent-pink-500" checked disabled  id="confirmation" name="confirmation">
+          <label class="ml-2 montserrat light-gray-1 cursor-pointer" for="confirmation">
+            {{'user.request.checkLabel'|translate}}
+          </label>
+        </div>
+
+
+      </div>
+    </div>
+    <!--Дополнительные документы-->
+
+    <!--Анкета на близких родственников-->
+    <div class="col-span-12 px-4 my-5 comfortaa">
+      <p class="font-normal text-black my-4 text-xl px-2">{{'user.relatives.title'|translate}}</p>
+      <div class="comforta overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-gray-4 border-solid border-0 border-b border-black">
+          <tr>
+            <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+              {{'user.relatives.fio'|translate}}
+            </th>
+            <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+              {{'user.relatives.status'|translate}}
+            </th>
+            <th scope="col" class="text-md md:text-lg  font-medium text-black px-6 py-4 text-left">
+              {{'user.relatives.birthDate'|translate}}
+            </th>
+            <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+              {{'user.relatives.iin'|translate}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="survey.surveyRelatives">
+              <tr *ngFor="let relative of survey.surveyRelatives" class="comforta bg-gray-5 border-b transition duration-300 ease-in-out hover:bg-gray-2">
+                <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {{relative.surName}} {{relative.name}} {{relative.patronomic}}
+                </td>
+                <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  <span *ngIf="relative.relative">{{relative.relative | globalTranslate: 'title': translate.currentLang}}</span>
+                </td>
+                <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {{relative.birthDate | stringToDate}}
+                </td>
+                <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {{relative.iin}}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--Анкета на близких родственников-->
+  </div>
+  <!--Форма-->
+  <div class="col-span-12 text-right">
+    <a class="inline-block text-center w-52 text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900" routerLink="/user/show-request/{{survey.id}}">{{'buttons.back'|translate}}</a>
+  </div>
+  <!--Форма-->
+
+  <app-browser-file-modal [fileUrl]="currentFile"></app-browser-file-modal>
+
+</div>
+<!--End User Request-->
+

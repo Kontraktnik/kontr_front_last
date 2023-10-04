@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Руководство</title>
+</head>
+<body class="admin-body relative">
+<app-director-header (toggleNav)="toggleSidebar()" [sidebarState]="sidebarState"></app-director-header>
+<section class="lg:flex">
+  <app-director-sidebar [sideBarOpen]="sidebarState"></app-director-sidebar>
+  <div class="flex-1 md:px-8 overflow-x-scroll">
+    <router-outlet></router-outlet>
+  </div>
+</section>
+
+</body>
+</html>
+

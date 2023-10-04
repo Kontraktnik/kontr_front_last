@@ -1,0 +1,23 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 md:col-span-4 sm:col-span-6 w-full h-56 rounded-xl main-blue-bg p-5">
+      <fa-icon [icon]="faCheck" class="text-white text-56"></fa-icon>
+      <a [routerLink]="'/admin/role-list'" class="block text-white sm:text-xl md:text-xl  lg:text-2xl break-words underline font-extrabold cursor-pointer">
+        Администрирование <br>
+        Ролями
+      </a>
+    </div>
+    <div class="col-span-12 md:col-span-4 sm:col-span-6 w-full h-56 rounded-xl main-blue-bg p-5">
+      <fa-icon [icon]="faUsers" class="text-white text-56"></fa-icon><br>
+      <a [routerLink]="'/admin/user-list'" class="text-white sm:text-lg md:text-xl  lg:text-2xl break-words underline font-extrabold cursor-pointer">
+        Администрирование <br>
+        Пользователями
+      </a>
+    </div>
+
+
+  </div>
+
+
+
+</div>

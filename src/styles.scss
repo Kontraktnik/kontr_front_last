@@ -1,0 +1,220 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+//Global fonts
+//
+@font-face {
+  font-family: 'Tourney Thin';
+  src:  url('assets/fonts/Tourney-Thin.woff') format('woff'),
+  url('assets/fonts/Tourney-Thin.woff2') format('woff2'),
+  url('assets/fonts/Tourney-Thin.ttf') format('truetype'),
+  url('assets/fonts/Tourney-Thin.eot') format('eot');
+}
+//Comforta
+@font-face {
+  font-family: 'Comforta';
+  src:  url('assets/fonts/Comfortaa.woff') format('woff'),
+  url('assets/fonts/Comfortaa.ttf') format('truetype'),
+  url('assets/fonts/Comfortaa.eot') format('eot');
+}
+@font-face {
+  font-family: 'Comforta Bold';
+  src:  url('assets/fonts/Comfortaa-Bold.woff') format('woff'),
+  url('assets/fonts/Comfortaa-Bold.ttf') format('truetype'),
+  url('assets/fonts/Comfortaa-Bold.eot') format('eot');
+}
+@font-face {
+  font-family: 'Comforta Light';
+  src:  url('assets/fonts/Comfortaa-Light.woff') format('woff'),
+  url('assets/fonts/Comfortaa-Light.ttf') format('truetype'),
+  url('assets/fonts/Comfortaa-Light.eot') format('eot');
+}
+//BebasNeue
+@font-face {
+  font-family: 'BebasNeue Regular';
+  src:  url('assets/fonts/BebasNeue-Regular.woff') format('woff'),
+  url('assets/fonts/BebasNeue-Regular.woff2') format('woff2'),
+  url('assets/fonts/BebasNeue-Regular.ttf') format('truetype'),
+  url('assets/fonts/BebasNeue-Regular.eot') format('eot'),
+  url('assets/fonts/BebasNeue-Regular.otf') format('otf');
+}
+//Montserrat
+@font-face {
+  font-family: 'Montserrat Regular';
+  src:   url('assets/fonts/montserrat-regular.woff') format('woff'),
+  url('assets/fonts/montserrat-regular.ttf') format('truetype'),
+  url('assets/fonts/montserrat-regular.woff2') format('woff2'),
+  url('assets/fonts/montserrat-regular.eot') format('eot');
+}
+@font-face {
+  font-family: 'Montserrat Bolder';
+  src:   url('assets/fonts/montserrat-500.woff') format('woff'),
+  url('assets/fonts/montserrat-500.ttf') format('truetype'),
+  url('assets/fonts/montserrat-500.woff2') format('woff2'),
+  url('assets/fonts/montserrat-500.eot') format('eot');
+}
+@font-face {
+  font-family: 'Montserrat Bold';
+  src:   url('assets/fonts/montserrat-700.woff') format('woff'),
+  url('assets/fonts/montserrat-700.ttf') format('truetype'),
+  url('assets/fonts/montserrat-700.woff2') format('woff2'),
+  url('assets/fonts/montserrat-700.eot') format('eot');
+}
+app-root {
+  display: block;
+}
+app-not-found {
+  display: block;
+}
+.tourney-thin{
+  font-family: "Tourney Thin";
+}
+.comforta{
+  font-family: "Comforta";
+}
+.comforta-light{
+  font-family: "Comforta Light";
+}
+.comforta-bold{
+  font-family: "Comforta Bold";
+}
+.bebas-neue{
+  font-family: "BebasNeue Regular";
+}
+.montserrat{
+  font-family: "Montserrat Regular";
+}
+.montserrat-bolder{
+  font-family: "Montserrat Bolder";
+}
+.montserrat-bold{
+  font-family: "Montserrat Bold";
+}
+//Font End
+
+//Color
+.red-color{
+  color: #FB3640;
+}
+.bg-red-color{
+  background: #FB3640;
+}
+.success-color{
+  color: #7BD00F;
+}
+.bg-success-color{
+  background: #7BD00F;
+}
+.main-blue-color{
+  color: #247BA0;
+}
+.main-blue-bg{
+  background: #247BA0;
+}
+.main-blue-bg-opacity{
+  background: rgba(36, 123, 160, 0.5);
+}
+.light-blue{
+  color: #0A2463;
+}
+.light-blue-bg{
+  background: #0A2463;
+}
+.light-blue-2{
+  color: #4C577F;
+}
+.light-blue-bg-2{
+  background: #b6bdd0;
+}
+
+.light-gray-1{
+  color: #605F5E;
+}
+.bg-light-gray-1{
+  background: #605F5E;
+}
+.text-gray-2{
+  color: #E2E2E2;
+}
+.color-gray-2{
+  color: #E2E2E2;
+}
+.bg-gray-1{
+  background: #F5F5F5;
+}
+.bg-gray-2{
+  background: #E2E2E2;
+}
+.bg-gray-3{
+  background: #CACACA;
+}
+.bg-gray-4{
+  background: #EAEAEA;
+}
+.bg-gray-5{
+  background: #EFEFEF;
+}
+.bg-gray-6{
+   background: #cfcfcf;
+ }
+
+//Color
+
+body{
+  background: #F5F5F5;
+  overflow-x: hidden!important;
+}
+hr{
+  background: #605F5E;
+}
+.home-body{
+  background: #F5F5F5;
+  height: auto;
+}
+html,body{
+  height: 100%;
+}
+.user-body{
+  background: #F5F5F5;
+  height: auto;
+}
+.auth-body{
+  background: #F5F5F5;
+  height: auto;
+  min-height: 100%;
+}
+.admin-body{
+  background: #EAEAEA;
+  height: auto;
+  min-height: 100%;
+}
+.knb-body{
+  background: #EAEAEA;
+  height: auto;
+  min-height: 100%;
+}
+.med-body{
+  background: #EAEAEA;
+  height: auto;
+  min-height: 100%;
+}
+p{
+  font-family: "Montserrat Regular";
+}
+a{
+  font-family: "Montserrat Regular";
+}
+.odd-table{
+  background: #F4F4F4;
+}
+.even-table{
+  background:  #E7E7E7;
+}
+.request-header{
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+}
+.text-56{
+  font-size: 56px;
+}

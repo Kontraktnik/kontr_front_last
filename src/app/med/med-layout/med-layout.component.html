@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Медпроверка</title>
+</head>
+<body class="med-body">
+<app-med-header (toggleNav)="toggleSidebar()" [sidebarState]="sidebarState"></app-med-header>
+<section class="lg:flex">
+  <app-med-sidebar [sideBarOpen]="sidebarState"></app-med-sidebar>
+  <div class="flex-1 md:px-8 overflow-x-scroll">
+    <router-outlet></router-outlet>
+  </div>
+</section>
+
+
+</body>
+</html>
+
+

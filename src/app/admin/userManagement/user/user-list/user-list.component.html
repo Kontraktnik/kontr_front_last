@@ -1,0 +1,195 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+
+    <div class="col-span-12 p-5 text-right">
+
+      <nav class="rounded-md w-full">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/user-management" class="text-blue-600 hover:text-blue-700">Администрирование пользователями</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Пользователь</li>
+        </ol>
+      </nav>
+      <a [routerLink]="'/admin/user-create'" class="w-80 text-white bg-success-color text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md" >Создать</a>
+    </div>
+
+    <div class="col-span-12">
+      <div class="md:flex justify-between align-middle my-4">
+        <div class="w-full mx-2">
+          <label for="searchTitle" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Поиск</label>
+          <div class="relative">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+              <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input [(ngModel)]="parameters.search" type="search" id="searchTitle" class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Поиск" required>
+            <button (click)="onSearch()" type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Поиск</button>
+          </div>
+        </div>
+      </div>
+      <div class="md:flex justify-between align-middle my-4">
+        <div class="w-1/2">
+          <ng-autocomplete
+            [data]="areas"
+            [searchKeyword]="keyword"
+            placeholder="Область"
+            (selected)='selectAreaEvent($event)'
+            (inputCleared)="isClosedAreaAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+            >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a class="text-left" [innerHTML]="item.titleRu"></a>
+          </ng-template>
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+        <div class="w-1/2 mx-2">
+          <ng-autocomplete
+            [data]="roles"
+            [searchKeyword]="keyword"
+            placeholder="Роли"
+            (selected)='selectRoleEvent($event)'
+            (inputCleared)="isClosedRoleAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+            >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a class="text-left" [innerHTML]="item.titleRu"></a>
+          </ng-template>
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="md:flex justify-between align-middle my-4">
+        <div class="w-1/3 px-4">
+          <select (change)="selectVerified($event.target)"  class="w-full h-full bg-white border-2 border-black p-2">
+            <option [value]="null" >Все</option>
+            <option [value]="true" >Верифицирован</option>
+            <option [value]="false">Не верифицирован</option>
+          </select>
+        </div>
+        <div class="w-1/3 px-4">
+          <select (change)="selectStatus($event.target)"  class="w-full h-full bg-white border-2 border-black p-2">
+            <option  [value]="null">Все</option>
+            <option  [value]="true">Активный</option>
+            <option  [value]="false">Не активный</option>
+          </select>
+        </div>
+        <div class="w-1/3 px-4">
+          <select (change)="changePageSize($event.target)" class="w-full h-full bg-white border-2 border-black p-2">
+            <option [selected]="parameters.pageSize == page" [value]="page" *ngFor="let page of perPage">
+              {{page}} объектов
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="col-span-12 w-full p-5">
+      <div class="overflow-x-auto" *ngIf="usersData != null">
+        <table class="min-w-full rounded">
+          <thead class="">
+          <tr class="rounded">
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Уникальный Идентификатор
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              ИИН
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Полное имя
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Роль
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Регион
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Номер телефона
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Почта
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Верифицирован
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Статус
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Действие
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="montserrat border-b text-center" *ngFor="let item of usersData.data | paginate : {
+                  itemsPerPage: usersData.pageSize,
+                  currentPage: usersData.pageIndex,
+                  totalItems: usersData.count
+            };">
+            <td class="px-6 py-4">
+              {{item.id}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.iin}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.fullName}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.role?.titleRu}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.area?.titleRu??"-"}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.phone}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.email}}
+            </td>
+            <td class="px-6 py-4">
+              <fa-icon [className]="(item.verified == true ? 'success-color mx-2':'text-red-500 mx-2')" [icon]="item.verified == true ? faCheck : faTimes"></fa-icon>
+            </td>
+            <td class="px-6 py-4">
+              <fa-icon [className]="(item.status == true ? 'success-color mx-2':'text-red-500 mx-2')" [icon]="item.status == true ? faCheck : faTimes"></fa-icon>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex space-x-2 justify-center">
+                <div>
+                  <a [routerLink]="'/admin/user-single/'+item.iin" type="button" class="cursor-pointer my-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Инфо</a>
+                  <a [routerLink]="'/admin/user-update/'+item.iin" type="button" class="cursor-pointer my-2 inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-yellow-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">Изменить</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="flex justify-center my-4">
+          <pagination-controls
+            previousLabel="Prev"
+            nextLabel="Next"
+            [autoHide]="true"
+            [responsive]="true"
+            (pageChange)="onPagerChange($event)"
+          ></pagination-controls>
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+

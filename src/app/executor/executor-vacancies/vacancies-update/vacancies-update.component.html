@@ -1,0 +1,405 @@
+<!--Search Vacancy-->
+<section class="py-24">
+  <div class="container bg-white rounded-lg mx-auto h-auto py-24 py-4 text-center px-4" *ngIf="data">
+
+    <h1 class="montserrat font-bold light-gray-1 text-2xl px-2">ИЗМЕНИТЬ ВАКАНСИЮ</h1>
+    <form [formGroup]="fbGroup" (ngSubmit)="saveForm()">
+      <div class="grid grid-cols-12 gap-4 mt-14 px-4">
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <ng-autocomplete
+              [data]="armyType"
+              [searchKeyword]="keyword"
+              [initialValue]="data.armyType"
+              placeholder="Типы ВС"
+              (selected)='selectArmyTypeEvent($event)'
+              (inputCleared)="isClosedArmyTypeAutoComplete()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+              >
+            </ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a class="text-left" [innerHTML]="item.titleRu"></a>
+            </ng-template>
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['armyTypeId'].invalid && (fbGroup.controls['armyTypeId'].dirty || fbGroup.controls['armyTypeId'].touched)">
+              <div *ngIf="fbGroup.controls['armyTypeId'].errors">
+                <div *ngIf="fbGroup.controls['armyTypeId'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('ArmyTypeId')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['ArmyTypeId']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <ng-autocomplete
+              [data]="armyRegion"
+              [searchKeyword]="keyword"
+              [initialValue]="data.armyRegion"
+              placeholder="Регионы командования"
+              (selected)='selectArmyRegionEvent($event)'
+              (inputCleared)="isClosedArmyRegionAutoComplete()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+              >
+            </ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a class="text-left" [innerHTML]="item.titleRu"></a>
+            </ng-template>
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['armyRegionId'].invalid && (fbGroup.controls['armyRegionId'].dirty || fbGroup.controls['armyRegionId'].touched)">
+              <div *ngIf="fbGroup.controls['armyRegionId'].errors">
+                <div *ngIf="fbGroup.controls['armyRegionId'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('ArmyRegionId')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['ArmyRegionId']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <ng-autocomplete
+              [data]="secretLevel"
+              [searchKeyword]="keyword"
+              [initialValue]="data.secretLevel"
+              placeholder="Доступ к секретам"
+              (selected)='selectSecretLevelEvent($event)'
+              (inputCleared)="isClosedSecretLevelAutoComplete()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+              >
+            </ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a class="text-left" [innerHTML]="item.titleRu"></a>
+            </ng-template>
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['secretLevelId'].invalid && (fbGroup.controls['secretLevelId'].dirty || fbGroup.controls['secretLevelId'].touched)">
+              <div *ngIf="fbGroup.controls['secretLevelId'].errors">
+                <div *ngIf="fbGroup.controls['secretLevelId'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('SecretLevelId')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['SecretLevelId']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <ng-autocomplete
+              [data]="jobCategory"
+              [searchKeyword]="keyword"
+              [initialValue]="data.jobCategory"
+              placeholder="Категория тарифа"
+              (selected)='selectJobCategoryEvent($event)'
+              (inputCleared)="isClosedJobCategoryAutoComplete()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+              >
+            </ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a class="text-left" [innerHTML]="item.titleRu"></a>
+            </ng-template>
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['jobCategoryId'].invalid && (fbGroup.controls['jobCategoryId'].dirty || fbGroup.controls['jobCategoryId'].touched)">
+              <div *ngIf="fbGroup.controls['jobCategoryId'].errors">
+                <div *ngIf="fbGroup.controls['jobCategoryId'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('JobCategoryId')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['JobCategoryId']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <ng-autocomplete
+              [data]="position"
+              [searchKeyword]="keyword"
+              [initialValue]="data.position"
+              placeholder="Позиция"
+              (selected)='selectPositionEvent($event)'
+              (inputCleared)="isClosedPositionAutoComplete()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+              >
+            </ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a class="text-left" [innerHTML]="item.titleRu"></a>
+            </ng-template>
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['positionId'].invalid && (fbGroup.controls['positionId'].dirty || fbGroup.controls['positionId'].touched)">
+              <div *ngIf="fbGroup.controls['positionId'].errors">
+                <div *ngIf="fbGroup.controls['positionId'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('PositionId')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['PositionId']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <ng-autocomplete
+              [data]="qualification"
+              [searchKeyword]="keyword"
+              [initialValue]="data.qualification"
+              placeholder="Квалифицация"
+              (selected)='selectQualificationEvent($event)'
+              (inputCleared)="isClosedQualificationAutoComplete()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate">
+              >
+            </ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a class="text-left" [innerHTML]="item.titleRu"></a>
+            </ng-template>
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['qualificationId'].invalid && (fbGroup.controls['qualificationId'].dirty || fbGroup.controls['qualificationId'].touched)">
+              <div *ngIf="fbGroup.controls['qualificationId'].errors">
+                <div *ngIf="fbGroup.controls['qualificationId'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('QualificationId')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['QualificationId']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <input formControlName="city" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="city" placeholder="Населенный пункт">
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['city'].invalid && (fbGroup.controls['city'].dirty || fbGroup.controls['city'].touched)">
+              <div *ngIf="fbGroup.controls['city'].errors">
+                <div *ngIf="fbGroup.controls['city'].errors.required">
+                  Поле пароль обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('City')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['City']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+        <div class="col-span-12 sm:col-span-6 md:col-span-6 px-4 my-2">
+          <!--Вакансия-->
+          <div class="form-group text-md md:text-lg text-left">
+            <input formControlName="quantity" class="montserrat  w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="number" min="0" max="10000" name="quantity" placeholder="Кол-во свободных мест">
+            <div class="text-red-500 text-left" *ngIf="fbGroup.controls['quantity'].invalid && (fbGroup.controls['quantity'].dirty || fbGroup.controls['quantity'].touched)">
+              <div *ngIf="fbGroup.controls['quantity'].errors">
+                <div *ngIf="fbGroup.controls['quantity'].errors.required">
+                  Поле обязательно для заполнения
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+            <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+              <div *ngIf="validationErrors.messages.hasOwnProperty('Quantity')">
+                <div class="text-left" *ngFor="let validationError of validationErrors.messages['Quantity']">
+                  {{validationError}}
+                </div>
+              </div>
+            </div>
+            <!--Валидационная Ошибка сервера-->
+          </div>
+          <!--Вакансия-->
+        </div>
+
+
+
+        <!--Требования-->
+        <div class="col-span-12 sm:col-span-12 md:col-span-12 text-left px-4 my-2">
+          <label for="requirements" class="montserrat cursor-pointer">Требования на русском</label>
+          <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+            <textarea formControlName="descriptionRu" id="requirements" class="w-full montserrat rounded border-black border py-4 px-4" cols="12" rows="12"></textarea>
+          </div>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['descriptionRu'].invalid && (fbGroup.controls['descriptionRu'].dirty || fbGroup.controls['descriptionRu'].touched)">
+            <div *ngIf="fbGroup.controls['descriptionRu'].errors">
+              <div *ngIf="fbGroup.controls['descriptionRu'].errors.required">
+                Поле обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('DescriptionRu')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['DescriptionRu']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+        <!--Требования-->
+        <!--Требования-->
+        <div class="col-span-12 sm:col-span-12 md:col-span-12 text-left px-4 my-2">
+          <label for="requirementsKz" class="montserrat cursor-pointer">Требования на казахском</label>
+          <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+            <textarea formControlName="descriptionKz" id="requirementsKz" class="w-full montserrat rounded border-black border py-4 px-4" cols="12" rows="12"></textarea>
+          </div>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['descriptionKz'].invalid && (fbGroup.controls['descriptionKz'].dirty || fbGroup.controls['descriptionKz'].touched)">
+            <div *ngIf="fbGroup.controls['descriptionKz'].errors">
+              <div *ngIf="fbGroup.controls['descriptionKz'].errors.required">
+                Поле обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('DescriptionKz')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['DescriptionKz']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+        <!--Требования-->
+        <!--Требования-->
+        <div class="col-span-12 sm:col-span-12 md:col-span-12 text-left px-4 my-2">
+          <label for="requirementsKz" class="montserrat cursor-pointer">Требования на английском</label>
+          <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+            <textarea formControlName="descriptionEn" id="requirementsEn" class="w-full montserrat rounded border-black border py-4 px-4" cols="12" rows="12"></textarea>
+          </div>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['descriptionEn'].invalid && (fbGroup.controls['descriptionEn'].dirty || fbGroup.controls['descriptionEn'].touched)">
+            <div *ngIf="fbGroup.controls['descriptionEn'].errors">
+              <div *ngIf="fbGroup.controls['descriptionEn'].errors.required">
+                Поле обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('DescriptionEn')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['DescriptionEn']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+        <!--Требования-->
+        <div class="col-span-12 sm:col-span-12 md:col-span-12 text-left px-4 my-2">
+          <input formControlName="status" type="checkbox" class="" id="active" name="active">
+          <label class="ml-2 montserrat light-gray-1 cursor-pointer text-md" for="active">
+            Вакансия активна
+          </label>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500 text-left" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Status')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Status']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="col-span-12 sm:flex justify-end">
+          <button [disabled]="fbGroup.invalid" class="{{fbGroup.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">
+            Сохранить
+          </button>
+          <a routerLink="/executor/vacancies" class=" text-white bg-red-color mt-5 text-sm px-16 py-3 mx-2 rounded hover:bg-red-900 shadow-md" >Отмена</a>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+
+</section>
+<!--End Search Vacancy-->
+
+<!--Start New Vacancy-->
+
+<!--End New Vacancy-->
+

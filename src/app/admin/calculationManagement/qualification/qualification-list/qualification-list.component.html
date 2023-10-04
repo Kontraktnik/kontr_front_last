@@ -1,0 +1,78 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+
+    <div class="col-span-12 p-5 text-right">
+
+      <nav class="rounded-md w-full">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/calculation-data" class="text-blue-600 hover:text-blue-700">Калькуляционные данные</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Тарифы категорий</li>
+        </ol>
+      </nav>
+
+      <a [routerLink]="'/admin/qualification-create'" class="w-80 text-white bg-success-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md" >Создать</a>
+    </div>
+
+    <div class="col-span-12 w-full p-5">
+
+      <div class="overflow-x-auto" *ngIf="(qualifications$|async)?.data != null">
+        <table class="min-w-full rounded">
+          <thead class="">
+          <tr class="rounded">
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Уникальный Идентификатор
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование на казахском
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование на русском
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Наименование на английском
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Процент,%
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              Действие
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="montserrat border-b text-center" *ngFor="let item of (qualifications$|async)?.data">
+            <td class="px-6 py-4">
+              {{item.id}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.titleKz}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.titleRu}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.titleEn}}
+            </td>
+            <td class="px-6 py-4">
+              {{item.percentage}}
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex space-x-2 justify-center">
+                <div>
+                  <a [routerLink]="'/admin/qualification-single/'+item.id" type="button" class="cursor-pointer my-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Инфо</a>
+                  <a [routerLink]="'/admin/qualification-update/'+item.id" type="button" class="cursor-pointer my-2 inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-yellow-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">Изменить</a>
+                  <a (click)="delete(item.id)" type="button" class="cursor-pointer my-2 inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-yellow-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">Удалить</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+

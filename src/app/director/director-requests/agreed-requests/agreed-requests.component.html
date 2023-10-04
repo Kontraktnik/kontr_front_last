@@ -1,0 +1,109 @@
+<div class="container mx-auto py-14">
+  <div class="shadow-lg bg-white rounded h-full" *ngIf="data != null">
+    <div class="overflow-x-auto">
+      <div class="overflow-x-auto">
+        <table class="min-w-full rounded">
+          <thead class="bg-white border-b light-blue-bg-2">
+          <tr class="rounded">
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.applicationNumber'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.fio'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.step'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.requestStatus'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.responseStatus'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.dateOfApplication'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.status'|translate}}
+            </th>
+            <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+              {{'table.action'|translate}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="even-table montserrat border-b text-center" *ngFor="let profile of data.data | paginate : {
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.pageIndex,
+                  totalItems: data.count
+            };">
+            <td class="px-6 py-4">
+              №{{profile.surveyId}}
+            </td>
+            <td class="px-6 py-4">
+              {{profile.survey?.fullName}}
+            </td>
+            <td class="px-6 py-4">
+              {{profile.step?.titleRu}}
+            </td>
+            <td class="px-6 py-4">
+              <div *ngIf="profile.requestedStatus == -1">
+                <p class="text-red-500">{{'statuses.requestCanceled'|translate}}</p>
+              </div>
+              <div *ngIf="profile.requestedStatus == 0">
+                <p class="text-indigo-600">{{'statuses.requestNotSent'|translate}}</p>
+              </div>
+              <div *ngIf="profile.requestedStatus == 1">
+                <p class="text-green-500">{{'statuses.requestSent'|translate}}</p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div *ngIf="profile.confirmedStatus == -1">
+                <p class="text-red-500">{{'statuses.requestDenied'|translate}}</p>
+              </div>
+              <div *ngIf="profile.confirmedStatus == 0">
+                <p class="text-indigo-600">{{'statuses.confirmationRequired'|translate}}</p>
+              </div>
+              <div *ngIf="profile.confirmedStatus == 1">
+                <p class="text-green-500">{{'statuses.requestAccepted'|translate}}</p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              {{profile.createdAt |date: 'dd/MM/yyyy H:m'}}
+            </td>
+            <td class="px-6 py-4">
+              <div *ngIf="profile.status == -1">
+                <p class="text-red-500">{{'statuses.denied'}}</p>
+              </div>
+              <div *ngIf="profile.status == 0">
+                <p class="text-indigo-600">{{'statuses.confirmationRequired'|translate}}</p>
+              </div>
+              <div *ngIf="profile.status == 1">
+                <p class="text-green-500">{{'statuses.approved'}}</p>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <a [routerLink]="'/director/dossier/'+ profile.surveyId +'/' + profile.id" class="underline cursor-pointer">
+                {{'SYSTEM.show'|translate}}
+              </a>
+            </td>
+          </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="py-8 text-center">
+      <pagination-controls
+        previousLabel="Prev"
+        nextLabel="Next"
+        [autoHide]="true"
+        [responsive]="true"
+        (pageChange)="onPagerChange($event)"
+      ></pagination-controls>
+    </div>
+  </div>
+</div>
+
+

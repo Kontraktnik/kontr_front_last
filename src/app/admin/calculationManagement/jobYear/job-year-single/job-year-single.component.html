@@ -1,0 +1,23 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full my-4">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/calculation-data" class="text-blue-600 hover:text-blue-700">Калькуляционные данные</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li><a routerLink="/admin/job-year-list" class="text-blue-600 hover:text-blue-700">Зарплата по сроку службы и категории тарифа</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Зарплата по сроку службы и категории тарифа</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Зарплата по сроку службы и категории тарифа</h1>
+    </div>
+    <div class="col-span-12 p-5" *ngIf="(model$|async)?.data">
+      <p class="font-bold">Категория тарифов: {{(model$|async)?.data?.jobCategory?.titleRu}}/{{(model$|async)?.data?.jobCategory?.titleKz}}/{{(model$|async)?.data?.jobCategory?.titleEn}}</p>
+      <p class="font-bold">Срок Службы: {{(model$|async)?.data?.serviceYear?.titleRu}}/{{(model$|async)?.data?.serviceYear?.titleKz}}/{{(model$|async)?.data?.serviceYear?.titleEn}}</p>
+      <p class="font-bold">Надбавка: {{(model$|async)?.data?.salary}}</p>
+
+    </div>
+  </div>
+</div>
+

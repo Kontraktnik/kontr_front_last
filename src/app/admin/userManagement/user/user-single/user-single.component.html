@@ -1,0 +1,121 @@
+<div class="container mx-auto py-14" *ngIf="user != null">
+  <!--Анкета в на других этапах-->
+  <div class="overflow-x-auto shadow-lg bg-white rounded px-8 py-8">
+    <!--    Личная информация-->
+    <div class="grid grid-cols-12 grid-rows-6 px-2 request-header">
+      <!--      Фото личного дела-->
+      <div class="flex justify-center w-full items-center col-span-12 sm:col-span-12 md:col-span-2 row-span-6">
+        <img class="max-w-full" src="assets/images/user.png">
+      </div>
+      <!--      Фото личного дела-->
+      <!--      ФИО и Номер заявки дела-->
+      <div class="col-span-12 md:col-span-10 row-span-2 border-solid border-b border-black md:flex items-end justify-between ">
+        <p class="comforta-bold text-center md:text-left text-lg sm:text-xl md:text-xl2">
+          {{user.fullName}}
+        </p>
+        <p class="comforta text-center md:text-right text-sm sm:text-md">
+          Id {{user.id}}
+        </p>
+      </div>
+      <!--      ФИО и Номер заявки дела-->
+      <!--      Информация -->
+      <div class="col-span-12 md:col-span-4 row-span-4">
+        <table class="w-full border-none text-left">
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">ИИН :</th>
+            <td class="comforta py-2">
+              {{user.iin}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Имя  :</th>
+            <td class="comforta py-2">
+              {{user.name}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Фамилия  :</th>
+            <td class="comforta py-2">
+              {{user.surname}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Отчество  :</th>
+            <td class="comforta py-2">
+              {{user.patronymic}}
+            </td>
+          </tr>
+
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Роль  :</th>
+            <td class="comforta py-2">
+              {{user.role?.titleRu}}
+            </td>
+          </tr>
+
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Регион  :</th>
+            <td class="comforta py-2">
+              {{user.area?.titleRu}}
+            </td>
+          </tr>
+
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Активен  :</th>
+            <td class="comforta py-2">
+              <fa-icon [className]="(user.status == true ? 'success-color mx-2':'text-red-500 mx-2')" [icon]="user.status == true ? faCheck : faTimes"></fa-icon>
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Подтвержден  :</th>
+            <td class="comforta py-2">
+              <fa-icon [className]="(user.verified == true ? 'success-color mx-2':'text-red-500 mx-2')" [icon]="user.verified == true ? faCheck : faTimes"></fa-icon>
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Дата создания  :</th>
+            <td class="comforta py-2">
+              {{user.createdAt | date: 'dd/MM/yyyy HH:mm'}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Дата обновления  :</th>
+            <td class="comforta py-2">
+              {{user.updatedAt | date: 'dd/MM/yyyy HH:mm'}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!--      Информация -->
+      <!--      Информация -->
+
+      <div class="col-span-12 md:col-span-4 row-span-4">
+        <table class="w-full border-none text-left">
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Контакты:</th>
+            <td class="comforta py-2">
+
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Телефон:</th>
+            <td class="comforta py-2">
+              {{user.phone}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">E-mail:</th>
+            <td class="comforta py-2">
+              {{user.email}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!--      Информация -->
+
+    </div>
+  </div>
+
+
+
+

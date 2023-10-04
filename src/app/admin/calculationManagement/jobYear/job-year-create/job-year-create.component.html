@@ -1,0 +1,117 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full my-4">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/calculation-data" class="text-blue-600 hover:text-blue-700">Калькуляционные данные</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li><a routerLink="/admin/job-year-list" class="text-blue-600 hover:text-blue-700">Зарплата по сроку службы и категории тарифа</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Создать Зарплату по сроку службы и категории тарифа</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Создать Зарплату по сроку службы и категории тарифа</h1>
+    </div>
+    <div class="col-span-12 p-5 text-right">
+      <form [formGroup]="fbGroup" (ngSubmit)="saveForm()">
+        <div class="my-10">
+          <ng-autocomplete
+            [data]="serviceYear"
+            [searchKeyword]="keyword"
+            placeholder="Срок Службы"
+            (selected)='selectServiceYear($event)'
+            (inputCleared)="isClosedServiceYearAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+            >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a class="text-left" [innerHTML]="item.titleRu"></a>
+          </ng-template>
+
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['serviceYearId'].invalid && (fbGroup.controls['serviceYearId'].dirty || fbGroup.controls['serviceYearId'].touched)">
+            <div *ngIf="fbGroup.controls['serviceYearId'].errors">
+              <div *ngIf="fbGroup.controls['serviceYearId'].errors.required">
+                Поле Срок Службы обязательно для заполнения
+              </div>
+
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('ServiceYearId')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['ServiceYearId']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+        <div class="my-10">
+          <ng-autocomplete
+            [data]="jobCategory"
+            [searchKeyword]="keyword"
+            placeholder="Категория тарифов"
+            (selected)='selectJobYear($event)'
+            (inputCleared)="isClosedJobYearAutoComplete()"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate">
+            >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            <a class="text-left" [innerHTML]="item.titleRu"></a>
+          </ng-template>
+
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['jobCategoryId'].invalid && (fbGroup.controls['jobCategoryId'].dirty || fbGroup.controls['jobCategoryId'].touched)">
+            <div *ngIf="fbGroup.controls['jobCategoryId'].errors">
+              <div *ngIf="fbGroup.controls['jobCategoryId'].errors.required">
+                Поле Срок Службы обязательно для заполнения
+              </div>
+
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('JobCategoryId')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['JobCategoryId']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <div class="my-10">
+          <input class="montserrat w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="number" min="0" max="100000000" formControlName="salary" placeholder="Надбавка">
+          <div class="text-red-500 text-left" *ngIf="fbGroup.controls['salary'].invalid && (fbGroup.controls['salary'].dirty || fbGroup.controls['salary'].touched)">
+            <div *ngIf="fbGroup.controls['salary'].errors">
+              <div *ngIf="fbGroup.controls['salary'].errors.required">
+                Поле процент обязательно для заполнения
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+          <div class="text-red-500" *ngIf="validationErrors.status">
+            <div *ngIf="validationErrors.messages.hasOwnProperty('Salary')">
+              <div class="text-left" *ngFor="let validationError of validationErrors.messages['Salary']">
+                {{validationError}}
+              </div>
+            </div>
+          </div>
+          <!--Валидационная Ошибка сервера-->
+        </div>
+
+        <button [disabled]="fbGroup.invalid" class="{{fbGroup.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">
+          Сохранить
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>

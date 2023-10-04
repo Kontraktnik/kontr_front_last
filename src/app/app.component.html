@@ -1,0 +1,9 @@
+<ngx-spinner>
+  <h3 class="mt-10">Loading...</h3>
+</ngx-spinner>
+
+<ng-container *ngIf="!loading">
+  <router-outlet></router-outlet>
+</ng-container>
+
+

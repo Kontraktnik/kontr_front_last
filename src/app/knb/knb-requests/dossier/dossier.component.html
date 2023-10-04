@@ -1,0 +1,842 @@
+<div class="container mx-auto py-14" *ngIf="(survey$|async)!=null && (survey$|async)?.data != null">
+  <!--Анкета в на других этапах-->
+  <div class="overflow-x-auto shadow-lg bg-white rounded px-8 py-8" *ngIf="(survey$|async)?.data?.currentStepId != null && ((survey$|async)?.data?.currentStepId != 2)">
+    <app-survey-report [SurveyId]="(survey$|async)?.data?.id"></app-survey-report>
+
+    <!--    Личная информация-->
+    <div class="grid grid-cols-12 grid-rows-6 px-2 request-header">
+      <!--      Фото личного дела-->
+      <div class="flex justify-center w-full items-center col-span-12 sm:col-span-12 md:col-span-2 row-span-6">
+        <img class="max-w-full" src="{{(survey$|async)?.data?.imageUrl | authFile:true}}">
+      </div>
+      <!--      Фото личного дела-->
+      <!--      ФИО и Номер заявки дела-->
+      <div class="col-span-12 md:col-span-10 row-span-2 border-solid border-b border-black md:flex items-end justify-between ">
+        <p class="comforta-bold text-center md:text-left text-lg sm:text-xl md:text-xl2">
+          {{(survey$|async)?.data?.fullName}}
+        </p>
+        <p class="comforta text-center md:text-right text-sm sm:text-md">
+          Заявка № {{(survey$|async)?.data?.id}}
+        </p>
+      </div>
+      <!--      ФИО и Номер заявки дела-->
+      <!--      Информация -->
+      <div class="col-span-12 md:col-span-4 row-span-4">
+        <table class="w-full border-none text-left">
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Дата подачи :</th>
+            <td class="comforta py-2"> {{(survey$|async)?.data?.createdAt | date: 'dd/MM/yyyy HH:mm'}}</td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Вакансия  :</th>
+            <td class="comforta py-2" *ngIf="(survey$|async)?.data?.position != null">
+              {{(survey$|async)?.data?.position?.titleRu}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Регион  :</th>
+            <td class="comforta py-2" *ngIf="(survey$|async)?.data?.birthArea != null">
+              {{(survey$|async)?.data?.birthArea?.titleRu}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!--      Информация -->
+      <!--      Информация -->
+
+      <div class="col-span-12 md:col-span-4 row-span-4">
+        <table class="w-full border-none text-left">
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Контакты:</th>
+            <td class="comforta py-2"></td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">Телефон:</th>
+            <td class="comforta py-2" *ngIf="(survey$|async)?.data?.phone != null">
+              {{(survey$|async)?.data?.phone}}
+            </td>
+          </tr>
+          <tr class="text-sm md:text-md">
+            <th class="comforta-bold py-2">E-mail:</th>
+            <td class="comforta py-2" *ngIf="(survey$|async)?.data?.email != null">
+              {{(survey$|async)?.data?.email}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!--      Информация -->
+
+    </div>
+    <!--    Личная информация-->
+    <!--    Форма-->
+    <div class="grid grid-cols-12 gap-3 mt-14 px-2 py-12">
+      <div class="col-span-12 px-2 md:px-4 my-5 sm:flex text-center" style="flex-direction: column">
+        <p class="text-xl sm:text-2xl md:text-4xl montserrat-bold text-center self-center">Досье</p>
+        <a (click)="closeTab()" class="light-blue self-end cursor-pointer">
+          {{(tabClose ? 'Раскрыть': 'Свернуть')}}
+        </a>
+      </div>
+      <div class="col-span-12" *ngIf="signed">
+        <hr class="text-black h-1">
+      </div>
+      <!--      Досье-->
+      <div [ngClass]="'col-span-12 px-2 md:px-4 request-header ' + (tabClose ? 'hidden' : '')">
+        <!--Анкета-->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between ">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Анкета</p>
+          <span>
+               <a class="underline light-blue text-sm sm:text-md md:text-lg cursor-pointer" data-bs-toggle="modal" data-bs-target="#showDossierModal">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="faCheck"></fa-icon>
+            </span>
+        </div>
+        <!--Анкета-->
+        <!--Фото-->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Фото</p>
+          <span *ngIf="(survey$|async)?.data?.imageUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.imageUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Фото-->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Автобиография</p>
+          <span *ngIf="(survey$|async)?.data?.autoBiography as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.autoBiography != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Автобиография-->
+        <!--Документ об образовании-->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Документ об образовании</p>
+          <span *ngIf="(survey$|async)?.data?.educationUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.educationUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Документ об образовании-->
+        <!--Трудовая книжка -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Трудовая книжка</p>
+          <span *ngIf="(survey$|async)?.data?.employmentUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.employmentUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Трудовая книжка -->
+        <!--Военный билет  -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Военный билет </p>
+          <span *ngIf="(survey$|async)?.data?.millitaryUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.millitaryUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Военный билет  -->
+        <!--Военный билет  -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Удостоверение личности </p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Военный билет  -->
+        <!--Свидетельство о рождении кандидата  -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Свидетельство о рождении кандидата </p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Свидетельство о рождении кандидата  -->
+        <!--Водительское удостоверение   -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Водительское удостоверение</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Водительское удостоверение   -->
+        <!--Сведения о наличии либо отсутствии судимости    -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения о наличии либо отсутствии судимости</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения о наличии либо отсутствии судимости    -->
+        <!--Сведения о доходах    -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения о доходах</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения о доходах    -->
+        <!--Свидетельство о браке    -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Свидетельство о браке</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Свидетельство о браке    -->
+        <!--Сведения о доходах супруги    -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения о доходах супруги</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения о доходах супруги    -->
+        <!--Свидетельство о рождении детей    -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Свидетельство о рождении детей</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Свидетельство о рождении детей    -->
+        <!--Кредитная история     -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Кредитная история</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Кредитная история     -->
+        <!--Сведения о наличии ИП  -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения о наличии ИП</p>
+          <span *ngIf="(survey$|async)?.data?.identityCardUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.identityCardUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения о наличии ИП -->
+        <!--Сведения с туберкулезного диспансера   -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения с туберкулезного диспансера</p>
+          <span *ngIf="(survey$|async)?.data?.tuberUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.tuberUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения с туберкулезного диспансера  -->
+        <!--Сведения кожно-венерологического диспансера    -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения кожно-венерологического диспансера</p>
+          <span *ngIf="(survey$|async)?.data?.dermatologUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.dermatologUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения кожно-венерологического диспансера   -->
+        <!--Сведения с психоневрологического диспансера -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения с психоневрологического диспансера</p>
+          <span *ngIf="(survey$|async)?.data?.psychoNeurologicalUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.psychoNeurologicalUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения с психоневрологического диспансера-->
+        <!--Сведения с наркологического диспансера -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Сведения с наркологического диспансера</p>
+          <span *ngIf="(survey$|async)?.data?.narcologicalUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.narcologicalUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Сведения с наркологического диспансера-->
+        <!--Анкета для проведения спецпроверки -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Анкета для проведения спецпроверки</p>
+          <span *ngIf="(survey$|async)?.data?.specialCheckUrl as fileBrowse">
+               <a (click)="selectCurrentFile(fileBrowse)" data-bs-toggle="modal" data-bs-target="#browseFileModal" class="cursor-pointer underline light-blue text-sm sm:text-md md:text-lg">Посмотреть</a>
+                <fa-icon class="success-color mx-2" [icon]="(survey$|async)?.data?.specialCheckUrl != null ? faCheck : faTimes"></fa-icon>
+            </span>
+        </div>
+        <!--Анкета для проведения спецпроверки-->
+        <!--Анкета для проведения спецпроверки -->
+        <div class="form-group text-md md:text-lg py-4 sm:flex justify-between">
+          <p class="comforta font-bold text-md sm:text-lg md:text-xl">Согласие на сбор и обработку Персональных данных</p>
+          <span>
+               <a class="underline light-blue text-sm sm:text-md md:text-lg" href="">Посмотреть</a>
+               <fa-icon class="success-color mx-2" [icon]="faCheck"></fa-icon>
+            </span>
+        </div>
+        <!--Анкета для проведения спецпроверки-->
+        <hr class="h-1 text-black">
+        <!--Тестирование психологической пригодности-->
+      </div>
+
+      <!--      Досье-->
+
+      <!--Анкета на близких родственников-->
+      <div class="col-span-12 px-4 my-5 comfortaa" *ngIf="(survey$|async)?.data?.surveyRelatives">
+        <p class="font-normal text-black my-4 text-xl px-2">Анкета на близких родственников</p>
+        <div class="comforta overflow-x-auto">
+          <table class="min-w-full">
+            <thead class="bg-gray-4 border-solid border-0 border-b border-black">
+            <tr>
+              <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+                ФИО
+              </th>
+              <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+                Статус
+              </th>
+              <th scope="col" class="text-md md:text-lg  font-medium text-black px-6 py-4 text-left">
+                Год рождения
+              </th>
+              <th scope="col" class="text-md md:text-lg font-medium text-black px-6 py-4 text-left">
+                ИИН
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="comforta bg-gray-5 border-b transition duration-300 ease-in-out hover:bg-gray-2"
+                *ngFor="let relative of (survey$|async)?.data?.surveyRelatives"
+            >
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{(relative.surName != null ?relative.surName +" " : " ") + (relative.name != null ?relative.name + " " : " ")  +  (relative.patronomic != null ?relative.patronomic +" " : " ")}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{relative.relative?.titleRu}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{relative?.birthDate | stringToDate}}
+              </td>
+              <td class="text-md md:text-lg text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {{relative?.iin}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--Анкета на близких родственников-->
+    </div>
+    <!--Данные о заявке-->
+    <div class="grid grid-cols-12">
+      <div class="col-span-12">
+        <hr class="h-1 text-black">
+
+        <div class="form-group text-md md:text-lg py-4" *ngFor="let profile of (survey$|async)?.data?.profiles">
+          <div class="md:flex justify-between">
+            <p class="comforta font-bold text-md sm:text-lg md:text-xl">
+              {{profile?.step?.titleRu}}
+            </p>
+            <span>
+               <a (click)="setCurrentProfile(profile)" class="underline light-blue text-sm sm:text-md md:text-lg cursor-pointer" data-bs-toggle="modal" data-bs-target="#showProfileModal">Посмотреть</a>
+               <fa-icon *ngIf="profile.status == 1" class="success-color mx-2" [icon]="faCheck"></fa-icon>
+               <fa-icon *ngIf="profile.status == -1" class="text-red-500 mx-2" [icon]="faTimesCircle"></fa-icon>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--Данные о заявке-->
+    <!--Форма-->
+    <div class="grid grid-cols-12 gap-3 px-4 py-12" *ngIf="(survey$|async)?.data?.status == 0 && (survey$|async)?.data?.currentStepId == 3">
+      <!--Подцепка доп файлов-->
+      <div class="col-span-12 px-4 my-5 comfortaa">
+        <p class="font-normal text-black my-4 text-xl px-2">Комментарий и файлы</p>
+        <div class="comforta overflow-x-auto">
+          <app-profile-file-modal [profileId]="profileId"></app-profile-file-modal>
+        </div>
+      </div>
+      <div class="col-span-12 px-4 my-5 comfortaa">
+        <p class="font-normal text-black my-4 text-xl px-2">Результат спецпроверки:</p>
+        <div class="flex">
+          <div>
+            <div>
+              <div class="form-check">
+                <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                       type="radio"
+                       name="special_check"
+                       id="ready"
+                       [(ngModel)]="model.comment"
+                       [value]="'Спецпроверка пройдена'"
+                >
+                <label class="form-check-label inline-block text-green-700" for="ready">
+                  Спецпроверка пройдена
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                       type="radio"
+                       name="special_check"
+                       id="not_ready"
+                       [(ngModel)]="model.comment"
+                       [value]="'Спецпроверка не пройдена'"
+                >
+                <label class="form-check-label inline-block text-red-500" for="not_ready">
+                  Спецпроверка не пройдена
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                       type="radio"
+                       name="special_check"
+                       id="is_ready"
+                       [(ngModel)]="model.comment"
+                       [value]="'Специальная проверка пройдена на усмотрение'"
+                >
+                <label class="form-check-label inline-block text-blue-500" for="is_ready">
+                  Специальная проверка пройдена на усмотрение
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-span-12 sm:col-span-12 md:col-span-12 md:flex justify-between" *ngIf="(survey$ | async) as survey">
+        <a
+          routerLink="/knb/received-requests"
+          class="w-80 text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md text-center" >Назад</a>
+        <button
+          *ngIf="model.comment == 'Спецпроверка не пройдена'"
+          (click)="sendConfirmation(-1)"
+          class="w-80 text-white bg-red-600 mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md" >Отклонить</button>
+
+          <button
+            *ngIf="model.comment == 'Спецпроверка пройдена' || model.comment == 'Специальная проверка пройдена на усмотрение'"
+            (click)="sendConfirmation(1)"
+            class="w-80 text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-900 shadow-md" >Отправить</button>
+
+
+      </div>
+
+
+    </div>
+    <!--Форма-->
+
+  </div>
+  <!--Анкета в на других этапах-->
+  <app-browser-file-modal [fileUrl]="currentFile"></app-browser-file-modal>
+  <!-- Модальное окно для просмотра анкеты -->
+  <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="showDossierModal" tabindex="-1" aria-labelledby="showDossierModalTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered relative w-auto pointer-events-none">
+      <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+        <div class="justify-center flex modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+          <h5 class="text-xl font-medium leading-normal text-gray-800 text-center" id="showDossierModalScrollable">
+            Анкета
+          </h5>
+          <button type="button"
+                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body relative p-4">
+          <div class="w-full">
+            <!--Анкета-->
+            <p class="comforta font-normal text-black my-4 text-xl px-2">Анкета кандидата</p>
+            <div class="text-left">
+              <!--ФИО-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="nameAnketa" class="comforta cursor-pointer">Ф.И.О.</label>
+                <input id="nameAnketa" type="text" class="my-1 bg-gray-300 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="name"
+                       value="{{(survey$|async)?.data?.fullName}}">
+              </div>
+              <!--ФИО-->
+              <!--Место жительства-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="addressAnketa" class="comforta cursor-pointer">Место жительства</label>
+                <select id="addressAnketa"  class="my-1 bg-gray-300 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled name="address">
+                  <option>
+                    {{(survey$|async)?.data?.area?.titleRu}}
+                    {{(survey$|async)?.data?.region}}
+                    {{(survey$|async)?.data?.city}}
+                    {{(survey$|async)?.data?.appartment}}
+                    {{(survey$|async)?.data?.home}}
+                  </option>
+                </select>
+              </div>
+              <!--Место жительства-->
+              <!--ФИО-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="iinAnketa" class="comforta cursor-pointer">ИИН</label>
+                <input id="iinAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="iin"
+                       value="{{(survey$|async)?.data?.iin}}">
+              </div>
+              <!--ФИО-->
+
+              <!--Образование-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="educationAnketa" class="comforta cursor-pointer">Образование</label>
+                <textarea id="educationAnketa"   class="bg-gray-300 my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled name="education" >
+            {{(survey$|async)?.data?.education?.titleRu}}
+            </textarea>
+              </div>
+              <!--Образование-->
+
+              <!--Наличие водительского удостоверения-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="driver_licenseAnketa" class="comforta cursor-pointer">Наличие водительского удостоверения</label>
+                <select id="driver_licenseAnketa" multiple  class="my-1 bg-gray-300 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled  name="driver_license">
+                  <option *ngFor="let driver of (survey$|async)?.data?.surveyDrivers">
+                    {{driver?.driverLicense?.titleRu}}
+                  </option>
+                </select>
+              </div>
+              <!--Наличие водительского удостоверения-->
+
+              <!--Опыт работы	-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="experienceAnketa" class="comforta cursor-pointer">Опыт работы</label>
+                <select id="experienceAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="experience">
+                  <option *ngIf="(survey$|async)?.data?.experienced === true ">
+                    Да
+                  </option>
+                  <option *ngIf="(survey$|async)?.data?.experienced === false ">
+                    Нет
+                  </option>
+                </select>
+              </div>
+              <!--Опыт работы	-->
+
+              <p class="comforta text-md md:text-lg">Отношение к воинской службе:</p>
+              <!--1)	Прохождение воинской службы	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="service_yearAnketa" class="comforta cursor-pointer">1)	Прохождение воинской службы</label>
+                <select id="service_yearAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="service_year">
+                  <option *ngIf="(survey$|async)?.data?.served === true ">
+                    Да
+                  </option>
+                  <option *ngIf="(survey$|async)?.data?.served === false ">
+                    Нет
+                  </option>
+                </select>
+              </div>
+              <!--1)	Прохождение воинской службы-->
+
+              <!--Номер воинской части 	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="army_numberAnketa" class="comforta cursor-pointer">Номер воинской части </label>
+                <input id="army_numberAnketa" type="text" class=" my-1 bg-gray-300 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="army_number"
+                       value="{{(survey$|async)?.data?.servedArmyNumber}}">
+              </div>
+              <!--Номер воинской части -->
+
+              <!--Должность  	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="positionAnketa" class="comforta cursor-pointer">Должность</label>
+                <input id="positionAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="position"
+                       value="{{(survey$|async)?.data?.positionName}}">
+              </div>
+              <!--Должность  -->
+
+              <!--Воинское звание  	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="army_positionAnketa" class="comforta cursor-pointer">Воинское звание</label>
+                <input id="army_positionAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="army_position"
+                       value="{{(survey$|async)?.data?.armyRank?.titleRu}}">
+              </div>
+              <!--Воинское звание  -->
+
+              <!--2)	Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва: 	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="vtsh" class="comforta cursor-pointer">
+                  2)	Прошедшие подготовку в филиалах ВТШ МО
+                  РК по программе военнообученного резерва:
+                </label>
+                <select id="vtshAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vtsh">
+                  <option *ngIf="(survey$|async)?.data?.vtShServed === true ">
+                    Да
+                  </option>
+                  <option *ngIf="(survey$|async)?.data?.vtShServed === false ">
+                    Нет
+                  </option>
+                </select>
+              </div>
+              <!--2)	Прошедшие подготовку в филиалах ВТШ МО РК по программе военнообученного резерва: 	-->
+
+              <!--Наименование филиала 	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="vtsh_nameAnketa" class="comforta cursor-pointer">Наименование филиала</label>
+                <input id="vtsh_nameAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vtsh_name"
+                       value="{{(survey$|async)?.data?.vtSh?.titleRu}}">
+              </div>
+              <!--Наименование филиала 	-->
+
+              <!--Год обучения 	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="education_yearAnketa" class="comforta cursor-pointer">Год обучения</label>
+                <input id="education_yearAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="education_year"
+                       value="{{(survey$|async)?.data?.vtShYear}}">
+              </div>
+              <!--Год обучения 	-->
+
+              <p class="comforta text-md md:text-lg">
+                Указать должность, на какую планирует поступить:
+              </p>
+              <!--Наименование должности/вакансия  	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="vacancyAnketa" class="comforta cursor-pointer">Наименование должности/вакансия </label>
+                <input id="vacancyAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="vacancy"
+                       value="{{(survey$|async)?.data?.position?.titleRu}}">
+              </div>
+              <!--Наименование должности/вакансия  	-->
+
+              <!--Срок заключения контракта-->
+              <div class="form-group my-4 text-md md:text-lg">
+                <label for="contract_dateAnketa" class="comforta cursor-pointer">Срок заключения контракта</label>
+                <select id="contract_dateAnketa"  class="bg-gray-300 my-1 block px-4 py-1.5 bg-white w-full rounded border-black border-solid border" disabled name="contract_date">
+                  <option>
+                    {{(survey$|async)?.data?.contractYear}}
+                  </option>
+                </select>
+              </div>
+              <!--Срок заключения контракта-->
+
+              <!--Регион  	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="regionAnketa" class="comforta cursor-pointer">Регион</label>
+                <input id="regionAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="region"
+                       value="{{(survey$|async)?.data?.area?.titleRu}}"
+                >
+              </div>
+              <!--Регион  	-->
+
+              <!--Телефон  	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="phoneAnketa" class="comforta cursor-pointer">Телефон</label>
+                <input id="phoneAnketa" type="text" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="phone"
+                       value="{{(survey$|async)?.data?.phone}}">
+              </div>
+              <!--Телефон  	-->
+
+              <!--Электронная почта  	-->
+              <div class="form-group mt-2 mb-4 text-md md:text-lg">
+                <label for="emailAnketa" class="comforta cursor-pointer">Электронная почта</label>
+                <input id="emailAnketa" type="email" class="bg-gray-300 my-1 block px-4 py-1 w-full rounded border-black border-solid border" disabled name="email"
+                       value="{{(survey$|async)?.data?.email}}">
+              </div>
+              <!--Электронная почта  	-->
+            </div>
+
+            <!--Анкета-->
+          </div>
+        </div>
+        <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+
+          <button type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+            Закрыть
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Модальное окно для просмотра анкеты -->
+
+  <!-- Модальное окно для просмотра статуса -->
+  <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="showProfileModal" tabindex="-1" aria-labelledby="showProfileModalTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered relative w-auto pointer-events-none">
+      <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+        <div class="justify-center flex modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+          <h5 class="text-xl font-medium leading-normal text-gray-800 text-center" id="showProfileModalScrollable">
+            Информация о заявке
+          </h5>
+          <button type="button"
+                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body relative p-4">
+          <div class="w-full">
+            <div class="flex flex-col">
+              <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                  <div class="overflow-hidden">
+                    <table class="min-w-full" *ngIf="currentProfile != null">
+                      <thead class="bg-white border-b">
+                      <tr>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                          Наименование
+                        </th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                          Значение
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          № Заявки
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.surveyId}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Этап
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.step?.titleRu}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Номер запроса
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.id}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Статус Заявителя
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                            <span *ngIf="currentProfile.requestedStatus == 1">
+                             <a class="underline light-blue text-sm">Принято</a>
+                             <fa-icon class="success-color mx-2" [icon]="faCheck"></fa-icon>
+                            </span>
+                          <span *ngIf="currentProfile.requestedStatus == 0">
+                             <a class="underline light-blue text-sm">В работе</a>
+                            </span>
+                          <span *ngIf="currentProfile.requestedStatus == -1">
+                             <a class="underline light-blue text-sm ">Отказано</a>
+                             <fa-icon class="red-color mx-2" [icon]="faTimesCircle"></fa-icon>
+                            </span>
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          ФИО Подтвердающего
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.confirmedUser?.fullName}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          ИИН Подтвердающего
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.confirmedUserIIN}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Статус Подтвердающего
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap" *ngIf="currentProfile.confirmedStatus != null">
+                            <span *ngIf="currentProfile?.confirmedStatus == 1">
+                             <a class="underline light-blue text-sm">Принято</a>
+                             <fa-icon class="success-color mx-2" [icon]="faCheck"></fa-icon>
+                            </span>
+                          <span *ngIf="currentProfile?.confirmedStatus == 0">
+                             <a class="underline light-blue text-sm">В работе</a>
+                            </span>
+                          <span *ngIf="currentProfile?.confirmedStatus == -1">
+                             <a class="underline light-blue text-sm">Отказано</a>
+                             <fa-icon class="red-color mx-2" [icon]="faTimesCircle"></fa-icon>
+                            </span>
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100" *ngIf="currentProfile.stepId == 5">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Категория годности
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{(survey$|async)?.data?.medicalStatus?.titleRu}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Комментарий
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.comment}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Дата создания
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.createdAt |date: 'dd/MM/yyyy H:m'}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Дата Обновления
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.updatedAt |date: 'dd/MM/yyyy H:m'}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Дата Окончания
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          {{currentProfile?.expiredAt |date: 'dd/MM/yyyy H:m'}}
+                        </td>
+                      </tr>
+                      <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100" *ngIf="currentProfile.profileFiles != null && currentProfile.profileFiles.length">
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          Подцепленные файлы
+                          <span class="text-sm inline-block py-1.5 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-600 text-white rounded">{{currentProfile.profileFiles != null ? currentProfile.profileFiles.length :0}}</span>
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                          <div class="flex justify-center" *ngFor="let item of currentProfile.profileFiles">
+                            <ul class="bg-white rounded-lg w-96 text-gray-900 my-5 border-t border-b border-black border-2">
+                              <li class="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                                <a target="_blank" href="{{item.file | authFile}}" download  class="cursor-pointer rounded-xl px-6 pt-2.5 pb-2 bg-blue-700 text-white font-medium text-xs inline">
+                                  <fa-icon [icon]="faDownload" class="bg-blue-700"></fa-icon>
+                                </a>
+                              </li>
+                              <li class="px-6 py-2 border-b border-gray-200 w-full">
+                                Загрузил: {{item.user?.fullName}} ({{item.user?.iin}})
+                              </li>
+                              <li class="px-6 py-2 border-b border-gray-200 w-full">
+                                Комментарий:
+                                {{item.comment}}
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+
+          <button type="button"
+                  class="text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900 shadow-md mx-2"
+                  data-bs-dismiss="modal">
+            Закрыть
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Модальное окно для просмотра статуса -->
+</div>
+
+
+
+

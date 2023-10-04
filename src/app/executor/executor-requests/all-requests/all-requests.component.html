@@ -1,0 +1,241 @@
+<section class="py-24">
+  <div class="container bg-white rounded-lg mx-auto h-auto py-24 py-4 text-center px-4">
+
+    <h1 class="montserrat font-bold light-gray-1 text-2xl px-2">Контроль заявок</h1>
+    <div class="grid grid-cols-12 gap-4 mt-14 px-4">
+      <div class="col-span-12">
+        <div class="w-full mx-2">
+          <label for="searchTitle" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Поиск</label>
+          <div class="relative">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+              <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input [(ngModel)]="parameters.search" type="search" id="searchTitle" class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Поиск" required>
+            <button (click)="onSearch()" type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Поиск</button>
+          </div>
+        </div>
+      </div>
+      <!--      Army Rank-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="armyRanks"
+          [searchKeyword]="keyword"
+          placeholder="Звания подающего"
+          (selected)='selectArmyRankEvent($event)'
+          (inputCleared)="isClosedArmyRankAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Position-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="position"
+          [searchKeyword]="keyword"
+          placeholder="Позиция подающего"
+          (selected)='selectPositionEvent($event)'
+          (inputCleared)="isClosedPositionAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Education-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="educations"
+          [searchKeyword]="keyword"
+          placeholder="Образование подающего"
+          (selected)='selectEducationEvent($event)'
+          (inputCleared)="isClosedEducationAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Vtsh-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="vtsh"
+          [searchKeyword]="keyword"
+          placeholder="Прохождение ВТШ подающего"
+          (selected)='selectVtshEvent($event)'
+          (inputCleared)="isClosedVtshAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Steps-->
+      <div class="col-span-12 md:col-span-6">
+        <ng-autocomplete
+          [data]="steps"
+          [searchKeyword]="keyword"
+          placeholder="Этап"
+          (selected)='selectStepEvent($event)'
+          (inputCleared)="isClosedStepAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <!--      Status-->
+      <div class="col-span-12 md:col-span-3">
+        <ng-autocomplete
+          [data]="statuses"
+          [searchKeyword]="keyword"
+          placeholder="Статус"
+          (selected)='selectStatusEvent($event)'
+          (inputCleared)="isClosedStatusAutoComplete()"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+          >
+        </ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a class="text-left" [innerHTML]="item.titleRu"></a>
+        </ng-template>
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+      <div class="col-span-12 md:col-span-3">
+        <select class="w-full h-full bg-white border-2 border-black p-2">
+          <option [selected]="parameters.pageSize == page" (click)="changePageSize(page)" *ngFor="let page of perPage">
+            {{page}} объектов
+          </option>
+        </select>
+      </div>
+    </div>
+
+
+    <div class="grid grid-cols-12 gap-4 px-4 my-5" *ngIf="data">
+      <div class="col-span-12">
+        <div class="overflow-x-auto">
+          <div class="overflow-x-auto">
+            <table class="min-w-full rounded">
+              <thead class="bg-white border-b light-blue-bg-2">
+              <tr class="rounded">
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Номер заявки
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  ФИО Заявителя
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Этап
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Руководитель
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Исполнитель
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Дата подачи
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Статус
+                </th>
+                <th scope="col" class="montserrat-bold text-md md:text-lg text-black font-bold text-center px-6 py-4 text-left">
+                  Действие
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="even-table montserrat border-b text-center" *ngFor="let survey of data.data | paginate : {
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.pageIndex,
+                  totalItems: data.count
+            };">
+                <td class="px-6 py-4">
+                  №{{survey.id}}
+                </td>
+                <td class="px-6 py-4">
+                  {{survey?.fullName}}
+                </td>
+                <td class="px-6 py-4">
+                  {{survey.currentStep?.titleRu}}
+                </td>
+                <td class="px-6 py-4">
+                  {{survey.surveyExecutor?.director?.fullName}}
+                </td>
+                <td class="px-6 py-4">
+                  {{survey.surveyExecutor?.executor?.fullName}}
+                </td>
+                <td class="px-6 py-4">
+                  {{survey.createdAt |date: 'dd/MM/yyyy HH:mm'}}
+                </td>
+                <td class="px-6 py-4">
+                  <div *ngIf="survey.status == -1">
+                    <p class="text-red-500">Отказано</p>
+                  </div>
+                  <div *ngIf="survey.status == 0">
+                    <p class="text-indigo-600">В работе</p>
+                  </div>
+                  <div *ngIf="survey.status == 1">
+                    <p class="text-green-500">Утверждено</p>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <a [routerLink]="'/executor/dossier/'+ survey.id +'/' + survey.id" class="underline cursor-pointer">
+                    Просмотр
+                  </a>
+                </td>
+              </tr>
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="py-8 text-center">
+          <div class="flex justify-center my-4">
+            <pagination-controls
+              previousLabel="Prev"
+              nextLabel="Next"
+              [autoHide]="true"
+              [responsive]="true"
+              (pageChange)="onPagerChange($event)"
+            ></pagination-controls>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+
+</section>
+

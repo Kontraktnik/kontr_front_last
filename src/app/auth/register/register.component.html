@@ -1,0 +1,199 @@
+<!--Register Start-->
+<div class="container mx-auto h-auto py-24 py-4 text-center min-h-screen">
+  <h1 class="montserrat font-bold light-gray-1 text-2xl font-bold px-2">Регистрация</h1>
+<!--Форма-->
+  <div class="text-red-500" *ngIf="errors.status">
+    <ul>
+      <li *ngFor="let error of (errors.messages | valueArray)">{{error}}</li>
+    </ul>
+  </div>
+
+
+  <form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && onSubmit()">
+    <div class="mx-auto mt-8 sm:w-full md:w-1/2 text-center px-4">
+      <!--ИИН-->
+      <div class="form-group my-8">
+        <input [imask]="{mask: '000-000-000-000'}" [unmask]="true" formControlName="iin" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="iin" placeholder="ИИН">
+        <div class="text-red-500" *ngIf="registerForm.controls['iin'].invalid && (registerForm.controls['iin'].dirty || registerForm.controls['iin'].touched)">
+          <div *ngIf="registerForm.controls['iin'].errors">
+            <div *ngIf="registerForm.controls['iin'].errors.required">
+              Поле ИИН обязательно для заполнения
+            </div>
+            <div *ngIf="registerForm.controls['iin'].errors.pattern">
+              Неправильный формат ИИН
+            </div>
+            <div *ngIf="registerForm.controls['iin'].errors.minlength">
+              Минимальное значение 12 цифр
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('IIN')">
+            <div *ngFor="let validationError of errors.messages['IIN']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--ИИН-->
+      <!--Имя-->
+      <div class="form-group my-8">
+        <input formControlName="name" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="name" placeholder="Имя">
+        <div class="text-red-500" *ngIf="registerForm.controls['name'].invalid && (registerForm.controls['name'].dirty || registerForm.controls['name'].touched)">
+          <div *ngIf="registerForm.controls['name'].errors">
+            <div *ngIf="registerForm.controls['name'].errors.required">
+              Поле Имя обязательно для заполнения
+            </div>
+            <div *ngIf="registerForm.controls['name'].errors.pattern">
+              Разрешены только кириллица
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Name')">
+            <div *ngFor="let validationError of errors.messages['Name']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--Имя-->
+      <!--Фамилия-->
+      <div class="form-group my-8">
+        <input formControlName="surname" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="surname" placeholder="Фамилия">
+        <div class="text-red-500" *ngIf="registerForm.controls['surname'].invalid && (registerForm.controls['surname'].dirty || registerForm.controls['surname'].touched)">
+          <div *ngIf="registerForm.controls['surname'].errors">
+            <div *ngIf="registerForm.controls['surname'].errors.required">
+              Поле Фамилия обязательно для заполнения
+            </div>
+            <div *ngIf="registerForm.controls['surname'].errors.pattern">
+              Разрешены только кириллица
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Surname')">
+            <div *ngFor="let validationError of errors.messages['Surname']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--Фамилия-->
+      <!--Отчество-->
+      <div class="form-group my-8">
+        <input formControlName="patronymic" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="patronymic" placeholder="Отчество">
+        <div class="text-red-500" *ngIf="registerForm.controls['patronymic'].invalid && (registerForm.controls['patronymic'].dirty || registerForm.controls['patronymic'].touched)">
+          <div *ngIf="registerForm.controls['patronymic'].errors">
+            <div *ngIf="registerForm.controls['patronymic'].errors.required">
+              Поле Отчество обязательно для заполнения
+            </div>
+            <div *ngIf="registerForm.controls['patronymic'].errors.pattern">
+              Разрешены только кириллица
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Patronymic')">
+            <div *ngFor="let validationError of errors.messages['Patronymic']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--Отчество-->
+      <!--Телефон-->
+      <div class="form-group my-8">
+        <input [imask]="{mask: '+{7}(000)000-00-00'}" [unmask]="true" formControlName="phone" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="phone" placeholder="Телефон">
+        <div class="text-red-500" *ngIf="registerForm.controls['phone'].invalid && (registerForm.controls['phone'].dirty || registerForm.controls['phone'].touched)">
+          <div *ngIf="registerForm.controls['phone'].errors">
+            <div *ngIf="registerForm.controls['phone'].errors.required">
+              Поле телефон обязательно для заполнения
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Phone')">
+            <div *ngFor="let validationError of errors.messages['Phone']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--Телефон-->
+
+      <!--Email-->
+      <div class="form-group my-8">
+        <input formControlName="email" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="text" name="email" placeholder="Email">
+        <div class="text-red-500" *ngIf="registerForm.controls['email'].invalid && (registerForm.controls['email'].dirty || registerForm.controls['email'].touched)">
+          <div *ngIf="registerForm.controls['email'].errors">
+            <div *ngIf="registerForm.controls['email'].errors.required">
+              Поле Email обязательно для заполнения
+            </div>
+            <div *ngIf="registerForm.controls['email'].errors.email">
+              Почта не валидна
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Email')">
+            <div *ngFor="let validationError of errors.messages['Email']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--Email-->
+
+      <!--Пароль-->
+      <div class="form-group my-8">
+        <input formControlName="password" class="montserrat text-center w-full py-2 px-4 bg-gray-1 border-solid border-0 border-b border-black" type="password" name="password" placeholder="Пароль">
+        <small>Минимальная длина пароля должна превышать 6 знаков, и содержать буквы (латиница a-z A-Z) и цифры(0-9), а также разрешается специальные символы (@_)</small>
+        <div class="text-red-500" *ngIf="registerForm.controls['password'].invalid && (registerForm.controls['password'].dirty || registerForm.controls['password'].touched)">
+          <div *ngIf="registerForm.controls['password'].errors">
+            <div *ngIf="registerForm.controls['password'].errors.required">
+              Поле пароль обязательно для заполнения
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+        <div class="text-red-500" *ngIf="errors.status">
+          <div *ngIf="errors.messages.hasOwnProperty('Password')">
+            <div *ngFor="let validationError of errors.messages['Password']">
+              {{validationError}}
+            </div>
+          </div>
+        </div>
+        <!--Валидационная Ошибка сервера-->
+      </div>
+      <!--Пароль-->
+
+
+      <div class="items-center my-8">
+        <input formControlName="checkbox" type="checkbox" class="" id="confirmation" name="confirmation">
+        <label class="ml-2 montserrat light-gray-1 cursor-pointer text-sm" for="confirmation">
+          Я согласен на обработку персональных данных
+        </label>
+      </div>
+
+      <button [disabled]="registerForm.invalid" class="{{registerForm.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">Регистрация</button>
+
+
+    </div>
+  </form>
+<!--  Конец формы-->
+
+</div>
+<!--End Register Start-->

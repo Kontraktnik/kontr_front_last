@@ -1,0 +1,19 @@
+<div [ngClass]="'w-60 h-full shadow-md bg-white px-1 mr-2 h-screen flex absolute lg:sticky min-h-full ' + (sideBarOpen ? '' : 'hidden')">
+  <ul class="fixed my-8">
+    <li class="nav-item">
+      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden light-blue text-ellipsis whitespace-nowrap rounded hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out text-2xl" routerLink="/admin/system-data">Системные данные</a>
+    </li>
+    <li class="nav-item">
+      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden light-blue text-ellipsis whitespace-nowrap rounded hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out text-2xl" routerLink="/admin/calculation-data">Калькуляция зарплат</a>
+    </li>
+    <li class="nav-item">
+      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden light-blue text-ellipsis whitespace-nowrap rounded hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out text-2xl" routerLink="/admin/user-management">Пользователи</a>
+    </li>
+    <li class="relative my-2">
+      <a (click)="logout()" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden light-blue text-ellipsis whitespace-nowrap rounded hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out text-2xl" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+        Выход
+      </a>
+    </li>
+
+  </ul>
+</div>

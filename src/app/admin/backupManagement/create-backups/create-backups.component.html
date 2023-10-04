@@ -1,0 +1,41 @@
+<div class="container mx-auto py-14 bg-white px-4">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 my-2 px-4">
+      <nav class="rounded-md w-full">
+        <ol class="list-reset flex">
+          <li><a routerLink="/admin/backups" class="text-blue-600 hover:text-blue-700">Администрирование БД</a></li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+          <li class="text-gray-500">Резервные данные</li>
+        </ol>
+      </nav>
+      <h1 class="text-2xl">Создать Резервные данные</h1>
+    </div>
+    <div class="col-span-12 p-5 text-left">
+      <p>Выбранные БД для импорта:</p>
+      <p *ngIf="parameters.length == 0">
+        Все
+      </p>
+      <ul *ngIf="parameters.length > 0">
+        <li *ngFor="let param of parameters">
+          {{param}}
+        </li>
+      </ul>
+    </div>
+    <div class="col-span-12 p-5 text-left">
+      <p>Выбрать БД для импорта:</p>
+      <div class="my-10 text-left" *ngFor="let item of selectParams">
+        <input (change)="onSelectDbName(item.code)" type="checkbox" class="" id="confirmation{{item.code}}" name="confirmation">
+        <label class="ml-2 montserrat light-gray-1 cursor-pointer text-md" for="confirmation{{item.code}}">
+          {{item.title}}
+        </label>
+      </div>
+    </div>
+    <div class="col-span-12 text-right">
+      <button (click)="uploadDB()" class="main-blue-bg montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">
+        Создать бэкап
+      </button>
+    </div>
+
+  </div>
+</div>
+
