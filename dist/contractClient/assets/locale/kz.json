@@ -1,0 +1,174 @@
+{
+  "SYSTEM": {
+    "welcome": "Қош келдіңіз",
+    "login": "Кіру",
+    "logout": "Шығу",
+    "navTitle": "Келісімшарт бойынша әскери қызметке қабылдау жөніндегі cервис",
+    "show": "Көру",
+    "yes": "Ия",
+    "no": "Жоқ",
+    "select": "Таңдаңыз",
+    "selectAll": "Барлығын таңдау",
+    "deleteAll": "Барлығын алып тастау",
+    "attach": "Жүктеу",
+    "submitDeclaration": "Декларацияны жүктеу",
+    "downloadExample": "Мысалды жүктеу",
+    "search": "Іздеу",
+    "all": "Барлығы"
+  },
+  "validates": {
+    "rules": {
+      "required": "{{value}} міндетті түрде толтырылады",
+      "format": "Дұрыс емес формат"
+    }
+  },
+  "sidebar": {
+    "allRequests": "Өтініштер",
+    "reports": "Отчет",
+    "allQueries": "Барлық сұранымдар"
+  },
+  "navbar": {
+    "vacancies": "Вакансиялар",
+    "applyRequest": "Өтініш беру",
+    "myRequests": "Менің өтініштерім",
+    "received": "Жаңадан түскендер",
+    "agreement": "Келісімдегілер",
+    "signed": "Қол қойылғандар",
+    "rejected": "Қабылданбады"
+  },
+  "table": {
+    "applicationNumber": "Өтініш нөмірі",
+    "fio": "ТАЖ",
+    "step": "Қадам",
+    "requestStatus": "Сұраныс күйі",
+    "responseStatus": "Жауап күйі",
+    "dateOfApplication": "Жіберілген күні",
+    "dateOfUpdatedApplication": "Жаңартылған күні",
+    "dateOfEndApplication": "Аяқталу күні",
+    "status": "Статус",
+    "action": "Әрекет",
+    "comments": "Пікірлер",
+    "date": "Күні",
+    "detail": "Толығырақ",
+    "files": "Тіркелген файлдар"
+  },
+  "statuses": {
+    "requestSent": "Сұраныс жіберілді",
+    "requestCanceled": "Сұраныс қайтарылды",
+    "requestNotSent": "Сұраныс жіберілмеді",
+    "requestDenied": "Сұраныс қабылданбады",
+    "confirmationRequired": "Растау қажет",
+    "requestAccepted": "Өтінім қабылданды",
+    "denied": "Қабылданбады",
+    "approved": "Бекітілген",
+    "applicationRejected": "Өтінім қабылданбады",
+    "inWork": "Өңделуде",
+    "applicationReceived": "Өтінім қабылданды",
+    "needToConfirm": "Растау қажет!",
+    "deadline": "Өтінімді өңдеу мерзімі {{limit}} жұмыс күндеріне дейін",
+    "knbReceived": "Арнайы тексеруден өтті",
+    "medRejected": "Медициналық тексеруге дайындық қабылданбады",
+    "medReceived": "Құжаттар медициналық тексеруге жіберілді",
+    "medFinalRejected": "Медициналық тексеруден өткен жоқ",
+    "medFinalReceived": "Медициналық тексеруден өтті",
+    "psychoRejected": "Психологиялық тестілеуге дайындық қабылданбады",
+    "psychoReceived": "Құжаттар психологиялық тестілеуге жіберілді",
+    "psychoFinalRejected": "Психологиялық тексеруден өткен жоқ",
+    "psychoFinalReceived": "Психологиялық тексеруден өтті",
+    "contractRejected": "Өтініш қабылданбады",
+    "contractReceived": "Өтініш қол қоюға жіберілді",
+    "contractOnWork": "Құттықтаймыз! Сіз бос лауазымға іріктеуден сәтті өттіңіз.",
+    "contractFinalRejected": "Өтінім қабылданбады",
+    "contractFinalReceived": "Өтінімге сәтті қол қойылды"
+  },
+  "steps": {
+    "documentsSent": "Құжаттар жіберілді",
+    "acceptedForWork": "Өңделуге қабылданды",
+    "knbProcessing": "Арнайы тексеру жіберілді",
+    "knb": "Арнайы тексеру",
+    "med": "Медициналық тексеру",
+    "contractSigning": "Келісімшартқа қол қою"
+  },
+  "buttons": {
+    "save": "Сақтау",
+    "reset": "Тазалау",
+    "send": "Жіберу",
+    "delete": "Жою",
+    "edit": "Қайта өңдеу",
+    "cancel": "Болдырмау",
+    "back": "Артқа",
+    "close": "Жабу"
+  },
+  "user": {
+    "request": {
+      "title": "Келісімшарт Бойынша Әскери Қызметке Өтініш Беру",
+      "newRequest": "Жаңа өтінім",
+      "surveyUser": "Үміткердің сауалнамасы",
+      "fio": "Т.А.Ә",
+      "birthArea": "Тұрғылықты жері",
+      "area": "Облыс",
+      "city": "Аудан",
+      "region": "Елді мекен (қала / кент / ауыл)",
+      "street": "Көше / шағын аудан",
+      "home": "Үй",
+      "apartment": "Квартира",
+      "iin": "ЖСН",
+      "education": "Білімі",
+      "driverLicense": "Жүргізуші куәлігінің болуы",
+      "experience": "Жұмыс тәжірибесі",
+      "military": "Әскери қызметке деген көзқарас:",
+      "isServed": "Әскери қызмет өткеру",
+      "servedArmyNumber": "Әскери бөлімнің нөмірі",
+      "positionName": "Лауазымы",
+      "armyRank": "Әскери атағы",
+      "isVtsh": "Әскери оқытылған резерв бағдарламасы бойынша ҚР ҚМ ВТШ филиалдарында даярлықтан Өткендер:",
+      "vtshName": "Филиалдың атауы",
+      "vtshYear": "Оқу жылы",
+      "vacancyTitle": "Қай лауазымға түсуді жоспарлап отырғанын көрсетіңіз:",
+      "vacancyName": "Лауазым атауы / бос орын",
+      "vacancyRegion": "Облыс",
+      "contractYear": "Келісімшарт жасасу мерзімі",
+      "phone": "Телефон",
+      "email": "Электрондық пошта",
+      "documents": "Қосымша құжаттар",
+      "photo": "Фото",
+      "autoBio": "Автобиография",
+      "documentEducation": "Қосымшасы бар білім туралы құжат",
+      "documentIncome": "Кірістер мен мүлік туралы мәліметтер",
+      "documentEmployment": "Еңбек кітапшасы",
+      "documentMilitary": "Әскери қызметті өткеру туралы мәліметтер",
+      "documentSpecial": "Арнайы тексеру жүргізуге арналған сауалнама",
+      "checkLabel": "Мен жеке деректерімді жинауға және өңдеуге келісім беремін"
+    },
+    "relatives": {
+      "title": "Жақын туыстарына сауалнама",
+      "fio": "Т.А.Ә",
+      "status": "Статус",
+      "birthDate": "Туған жылы",
+      "iin": "ЖСН"
+    },
+    "allRequests": {
+      "myRequests": "Менің өтініштерім",
+      "request": "Өтініш",
+      "requestInfo": "Өтініш туралы ақпарат",
+      "requestTitle": "Атауы",
+      "requestMeaning": "Мағынасы"
+    }
+  },
+  "director": {},
+  "executor": {},
+  "knb": {},
+  "med": {},
+  "admin": {},
+  "front": {
+    "vacancies": {
+      "searchVacancy": "ВАКАНСИЯЛАРДЫ ІЗДЕУ",
+      "positions": "Қызметі",
+      "newVacancies": "Жаңа вакансиялар",
+      "armyRegions": "Аймақтық <br> командалар",
+      "armyTypes": "Әскери басқару <br> органдары",
+      "areas": "Аймақтар"
+
+    }
+  }
+}
