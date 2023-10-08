@@ -6,6 +6,7 @@ import {ToastrService} from "ngx-toastr";
 import {ValidationErrors} from "../../shared/models/common/validation_errors";
 import Timeout = NodeJS.Timeout;
 import {THIS} from "@rxweb/reactive-form-validators/const";
+import {ActionSignType, CertUserInfo} from "../../shared/components/signin/authUserModel";
 
 @Component({
   selector: 'app-register',
@@ -17,6 +18,7 @@ export class RegisterComponent implements OnInit {
 
   // @ts-ignore
   registerForm: FormGroup;
+  ActionSignType = ActionSignType;
 
   constructor(private authService: AuthService, private fb: FormBuilder, private router: Router, private toastr: ToastrService) { }
 
@@ -52,11 +54,14 @@ export class RegisterComponent implements OnInit {
   }
 
 
-
-
-
-
-
-
-
+  checkIINandRegister($event: CertUserInfo) {
+    this.registerForm.controls["iin"].markAsTouched({});
+    if($event.number== this.registerForm.controls['iin'].value){
+      this.onSubmit();
+    }
+    else{
+      this.registerForm.controls['iin'].setErrors({'wrong': true});
+      console.log(this.registerForm.controls['iin'].errors)
+    }
+  }
 }

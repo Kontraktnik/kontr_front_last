@@ -1,4 +1,4 @@
-<button  data-modal-target="defaultModal" data-modal-toggle="defaultModal"
+<button  data-modal-target="defaultModal" data-modal-toggle="defaultModal" type="button"
          *ngIf="connection"
          [disabled]="inProcess || !isButtonActive" (click)="sign()"
                  class="montserrat inline-block text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900" >
@@ -6,7 +6,7 @@
 </button>
 
 
-<button nz-button
+<button nz-button type="button"
         nzType="link" *ngIf="!connection" (click)="initConnection()">Переподключить Ncalayer</button>
 
 <!--<nz-modal [nzVisible]="inProcess"-->

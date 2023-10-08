@@ -9,7 +9,7 @@
   </div>
 
 
-  <form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && onSubmit()">
+  <form [formGroup]="registerForm" (ngSubmit)="registerForm.valid">
     <div class="mx-auto mt-8 sm:w-full md:w-1/2 text-center px-4">
       <!--ИИН-->
       <div class="form-group my-8">
@@ -24,6 +24,9 @@
             </div>
             <div *ngIf="registerForm.controls['iin'].errors.minlength">
               Минимальное значение 12 цифр
+            </div>
+            <div *ngIf="registerForm.controls['iin'].errors['wrong']">
+              ИИН не совпадает
             </div>
           </div>
         </div>
@@ -188,8 +191,9 @@
         </label>
       </div>
 
-      <button [disabled]="registerForm.invalid" class="{{registerForm.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">Регистрация</button>
-
+      <app-signin *ngIf="!registerForm.invalid" text="Подписать и Зарегистрироваться" [command]="ActionSignType.getKeyInfo"
+                  (onOk)="checkIINandRegister($event)"></app-signin>
+<!--      <button [disabled]="registerForm.invalid" class="{{registerForm.invalid ? 'bg-gray-500' : 'bg-red-color'}} montserrat inline-block text-white mt-5 text-sm px-8 py-3 rounded">Регистрация</button>-->
 
     </div>
   </form>
