@@ -13,7 +13,7 @@
 
 
   <div class="tab-content my-8" id="auth-tabs">
-    <div [ngClass]="'tab-pane fade' +(tabType == 'login' ? ' show active ' : ' ')" id="login-tab" role="tabpanel" aria-labelledby="login-tab">
+    <div *ngIf="tabType == 'login'" [ngClass]="'tab-pane fade show active'" id="login-tab" role="tabpanel" aria-labelledby="login-tab">
       <div class="text-red-500" *ngIf="errors.status">
         <ul>
           <li *ngFor="let error of (errors.messages | valueArray)">{{error}}</li>
@@ -116,11 +116,11 @@
         </div>
       </div>
     </div>
+    <div *ngIf="tabType == 'ecp'" [ngClass]="'tab-pane my-8 fade show active'" id="ecp-tab" role="tabpanel" aria-labelledby="ecp-tab">
 
-    <div [ngClass]="'tab-pane my-8 fade' +(tabType == 'ecp' ? ' show active ' : ' ')" id="ecp-tab" role="tabpanel" aria-labelledby="ecp-tab">
-
-      <button  data-modal-target="defaultModal" data-modal-toggle="defaultModal"
-               class="montserrat inline-block text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900" >Выбор сертификата</button>
+      <app-signin [command]="ActionSignType.getKeyInfo" (onOk)="loginBySign($event)"></app-signin>
+<!--      <button  data-modal-target="defaultModal" data-modal-toggle="defaultModal"-->
+<!--               class="montserrat inline-block text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900" >Выбор сертификата</button>-->
 
     </div>
   </div>

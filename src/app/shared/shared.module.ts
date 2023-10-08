@@ -36,6 +36,7 @@ import { GlobalTranslatePipe } from './pipes/global-translate.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { StringToDatePipe } from './pipes/string-to-date.pipe';
 import { SurveyReportComponent } from './components/survey-report/survey-report.component';
+import {SignInComponent} from "./components/signin/signin.component";
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { SurveyReportComponent } from './components/survey-report/survey-report.
     TruncatePipe,
     StringToDatePipe,
     SurveyReportComponent,
+    SignInComponent
   ],
     exports: [
         AuthHeaderComponent,
@@ -93,7 +95,8 @@ import { SurveyReportComponent } from './components/survey-report/survey-report.
         GlobalTranslatePipe,
         TruncatePipe,
         StringToDatePipe,
-        SurveyReportComponent
+        SurveyReportComponent,
+        SignInComponent
     ],
   imports: [
     CommonModule,

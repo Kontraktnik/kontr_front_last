@@ -19,7 +19,10 @@
   "validates": {
     "rules": {
       "required": "{{value}} міндетті түрде толтырылады",
-      "format": "Дұрыс емес формат"
+      "format": "Дұрыс емес формат",
+      "agreed": {
+        "iinNotEqual": "ИИН сәйкес келмейді"
+      }
     }
   },
   "sidebar": {

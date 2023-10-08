@@ -1,0 +1,18 @@
+<button  data-modal-target="defaultModal" data-modal-toggle="defaultModal"
+         *ngIf="connection"
+         [disabled]="inProcess || !isButtonActive" (click)="sign()"
+                 class="montserrat inline-block text-white bg-red-color mt-5 text-sm px-8 py-3 rounded hover:bg-red-900" >
+  {{text}}
+</button>
+
+
+<button nz-button
+        nzType="link" *ngIf="!connection" (click)="initConnection()">Переподключить Ncalayer</button>
+
+<!--<nz-modal [nzVisible]="inProcess"-->
+<!--&gt;-->
+<!--    <h2>Подождите, выполняется операция в NCALayer...</h2>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    <div *nzModalFooter></div>-->
+<!--</nz-modal>-->

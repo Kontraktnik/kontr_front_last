@@ -32,6 +32,7 @@ import {PositionService} from "../../../shared/services/position.service";
 import {GlobalTranslateService} from "../../../shared/services/common/global-translate.service";
 import {TranslateService} from "@ngx-translate/core";
 import * as IMask from "imask";
+import {ActionSignType, CertUserInfo, SignKeyType} from 'src/app/shared/components/signin/authUserModel';
 
 @Component({
   selector: 'app-apply-request',
@@ -143,6 +144,9 @@ export class ApplyRequestComponent implements OnInit {
     overwrite: true
   };
 
+  SignKeyType = SignKeyType;
+  ActionSignType = ActionSignType;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private vacancyService: VacancyService,
@@ -173,7 +177,7 @@ export class ApplyRequestComponent implements OnInit {
       }),
       distinct(),
       shareReplay()
-    ).subscribe(res => this.currentUser = res)
+    ).subscribe(res => {this.currentUser = res;} )
   }
 
   ngOnInit(): void {
@@ -244,7 +248,7 @@ export class ApplyRequestComponent implements OnInit {
       specialCheckUrl: [null, Validators.required],
       relatives: [null],
       identityCardUrl: ['sadsdadfssda'],
-      agreed: [false, Validators.requiredTrue],
+      agreed: [null, Validators.requiredTrue],
       signKey: [null],
       UserSign: [null],
     })
@@ -465,8 +469,21 @@ export class ApplyRequestComponent implements OnInit {
       stringData.home + ', ' + stringData.appartment
   }
 
-  AgreeWithPrivacy(){
-    this.requestForm.controls["agreed"].setValue(true);
+  AgreeWithPrivacy($event: CertUserInfo){
+    this.requestForm.controls["agreed"].markAsTouched({});
+    if($event.number== this.currentUser.iin){
+      this.requestForm.controls["agreed"].setValue(true);
+      const button = window.document.getElementById('modalButtonClose');
+      if (button) {
+        button.click();
+      }
+    }
+    else{
+      console.log('error')
+      this.requestForm.controls["agreed"].setValue(false)
+      this.requestForm.controls['agreed'].setErrors({'required': true})
+      console.log(this.requestForm.controls['agreed'])
+    }
   }
 //END MODAL METHODS
 

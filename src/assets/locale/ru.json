@@ -19,7 +19,10 @@
   "validates": {
     "rules": {
       "required": "Поле {{value}} обязательно для заполнения",
-      "format": "Неправильный формат"
+      "format": "Неправильный формат",
+      "agreed": {
+        "iinNotEqual": "ИИН не совпадает"
+      }
     }
   },
   "sidebar": {

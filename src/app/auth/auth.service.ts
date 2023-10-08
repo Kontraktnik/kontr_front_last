@@ -130,4 +130,36 @@ export class AuthService {
     this.router.navigateByUrl('/auth/login')
   }
 
+  loginByEcp(request: any) {
+    return this.http.post(this.baseApiUrl + "/auth/login/ByEcp", request).pipe(
+      // @ts-ignore
+      map((response) => {
+        let user:IResponse<IUser> = {
+          // @ts-ignore
+          success: response.success,
+          // @ts-ignore
+          data: {
+            // @ts-ignore
+            roleId: response.data.userDto.roleId,
+            // @ts-ignore
+            jwtToken: response.data.jwtToken,
+            // @ts-ignore
+            fullName: response.data.userDto.fullName,
+            // @ts-ignore
+            iin: response.data.userDto.iin,
+            // @ts-ignore
+            email: response.data.userDto.email,
+            // @ts-ignore
+            phone: response.data.userDto.phone
+          }
+        }
+        localStorage.setItem('token', user.data.jwtToken);
+        this.currentUserSource.next(user)
+        this.isLoggedIn = true
+        return user
+      },catchError(error => {
+        return error
+      }))
+    )
+  }
 }

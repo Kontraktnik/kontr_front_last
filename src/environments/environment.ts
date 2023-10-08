@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   // baseApiUrl: "https://back.kontraktnik.kz/api",
-  baseApiUrl: "https://localhost:7000/api",
+  baseApiUrl: "https://jauynger.gov.kz/api",
   // baseUrl: "https://back.kontraktnik.kz"
-  baseUrl: "https://localhost:7000"
+  baseUrl: "https://jauynger.gov.kz"
 };
 
 /*

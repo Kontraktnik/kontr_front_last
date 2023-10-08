@@ -675,7 +675,7 @@
         <h5 class="text-xl font-medium leading-normal text-gray-800" id="privacyPolicyModalLabel">
           Согласие на сбор и обработку персональных данных
         </h5>
-        <button type="button"
+        <button type="button" id="modalButtonClose"
                 class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
                 data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -716,10 +716,18 @@
               {{'user.request.checkLabel'|translate}}
             </label>
           </div>
-          <div class="w-full text-right" *ngIf="agreeStatus">
-            <button (click)="AgreeWithPrivacy()" data-bs-dismiss="modal" type="checkbox" class="w-80 inline text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md">
-              Подписать ЭЦП
-            </button>
+          <div class="text-red-500 text-sm" *ngIf="requestForm.controls['agreed'].invalid && (requestForm.controls['agreed'].dirty || requestForm.controls['agreed'].touched)">
+            <div *ngIf="requestForm.controls['agreed'].errors">
+              <div *ngIf="requestForm.controls['agreed'].errors.required" [translate]="'validates.rules.agreed.iinNotEqual'">
+              </div>
+            </div>
+          </div>
+          <div class="w-full text-right">
+<!--            <button (click)="AgreeWithPrivacy()" data-bs-dismiss="modal" type="checkbox" class="w-80 inline text-white main-blue-bg mt-5 text-sm px-8 py-3 rounded hover:bg-blue-700 shadow-md">-->
+<!--              Подписать ЭЦП-->
+<!--            </button>-->
+            <app-signin [isButtonActive]="agreeStatus" text="Подписать с помощью ЭЦП" [command]="ActionSignType.getKeyInfo" [keyType]="SignKeyType.SIGNATURE" (onOk)="AgreeWithPrivacy($event)"></app-signin>
+
           </div>
         </section>
       </div>
