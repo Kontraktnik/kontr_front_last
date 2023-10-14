@@ -133,30 +133,36 @@ export class AuthService {
   loginByEcp(request: any) {
     return this.http.post(this.baseApiUrl + "/auth/login/ByEcp", request).pipe(
       // @ts-ignore
-      map((response) => {
-        let user:IResponse<IUser> = {
-          // @ts-ignore
-          success: response.success,
-          // @ts-ignore
-          data: {
+      map((response: any) => {
+        console.log(response)
+        if(response.success){
+          let user:IResponse<IUser> = {
             // @ts-ignore
-            roleId: response.data.userDto.roleId,
+            success: response.success,
             // @ts-ignore
-            jwtToken: response.data.jwtToken,
-            // @ts-ignore
-            fullName: response.data.userDto.fullName,
-            // @ts-ignore
-            iin: response.data.userDto.iin,
-            // @ts-ignore
-            email: response.data.userDto.email,
-            // @ts-ignore
-            phone: response.data.userDto.phone
+            data: {
+              // @ts-ignore
+              roleId: response.data.userDto.roleId,
+              // @ts-ignore
+              jwtToken: response.data.jwtToken,
+              // @ts-ignore
+              fullName: response.data.userDto.fullName,
+              // @ts-ignore
+              iin: response.data.userDto.iin,
+              // @ts-ignore
+              email: response.data.userDto.email,
+              // @ts-ignore
+              phone: response.data.userDto.phone
+            }
           }
+          localStorage.setItem('token', user.data.jwtToken);
+          this.currentUserSource.next(user)
+          this.isLoggedIn = true
+          return user
         }
-        localStorage.setItem('token', user.data.jwtToken);
-        this.currentUserSource.next(user)
-        this.isLoggedIn = true
-        return user
+        else{
+          return null;
+        }
       },catchError(error => {
         return error
       }))

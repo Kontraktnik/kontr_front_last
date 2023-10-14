@@ -1,6 +1,6 @@
 /* tslint:disable */
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {ActionSignType, CertUserInfo, SignKeyType} from "./authUserModel";
 
 
@@ -50,11 +50,10 @@ initConnection() {
   setTimeout(x => {
         this.checkConnection();
     }, 500);
-
 }
 
   createCMSSignatureFromBase64(event: any) {
-  console.log('event', event);
+  console.log('sign event', event.authorityKeyIdentifier);
   this.inProcess = false;
   if (event.code != 200) {
       // this.sendUserNotify('error', event.message);
@@ -65,7 +64,20 @@ initConnection() {
   // this.emit();
 }
 
+  signXml(event: any) {
+    console.log('event', event);
+    this.inProcess = false;
+    if (event.code != 200) {
+      // this.sendUserNotify('error', event.message);
+      return;
+    }
+    this.onOk.emit(event.responseObject);
+    // this.sendSignRaw();
+    // this.emit();
+  }
+
   getKeyInfo(event: any) {
+    console.log(event)
     this.inProcess = false;
     if (event.code != 200) {
       // this.sendUserNotify('error', event.message);
@@ -80,8 +92,10 @@ initConnection() {
     }
     // this.sendSignRaw();
     // this.emit();
+
   }
-sign() {
+
+  sign() {
   this.inProcess = true;
   let createCMSSignatureFromBase64 = {};
   if(this.command == ActionSignType.getKeyInfo){
@@ -91,7 +105,7 @@ sign() {
       args: ['PKCS12']
     };
   }
-  if(this.command == ActionSignType.createCMSSignatureFromBase64){
+  if(this.command == ActionSignType.createCMSSignatureFromBase64 || this.command == ActionSignType.signXml){
     createCMSSignatureFromBase64 = {
       module: 'kz.gov.pki.knca.commonUtils',
       method: this.command,
@@ -107,12 +121,14 @@ sign() {
     const parts = inputString.split(',');
     const authUserInfo: CertUserInfo = {
       FI: '',
-      SURNAME: '',
+      surname: '',
+      name: '',
       type: '',
       number: '',
       Country: '',
       middleName: '',
-      Email: '',
+      email: '',
+      keyHash: ''
     };
 
     parts.forEach((part) => {
@@ -120,9 +136,14 @@ sign() {
       switch (key) {
         case 'CN':
           authUserInfo.FI = value;
+          const words = value.split(' ');
+          if (words.length >= 2) {
+            // Get the second word (index 1)
+            authUserInfo.name = words[1];
+          }
           break;
         case 'SURNAME':
-          authUserInfo.SURNAME = value;
+          authUserInfo.surname = value;
           break;
         case 'SERIALNUMBER':
           authUserInfo.type = value.substring(0,3);
@@ -135,7 +156,10 @@ sign() {
           authUserInfo.middleName = value;
           break;
         case 'E':
-          authUserInfo.Email = value;
+          authUserInfo.email = value;
+          break;
+        case 'pem':
+          authUserInfo.keyHash = value;
           break;
       }
     });

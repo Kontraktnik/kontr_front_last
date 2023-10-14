@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../auth.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {ValidationErrors} from "../../shared/models/common/validation_errors";
 import Timeout = NodeJS.Timeout;
 import {THIS} from "@rxweb/reactive-form-validators/const";
 import {ActionSignType, CertUserInfo} from "../../shared/components/signin/authUserModel";
+import {UserService} from "../../shared/services/user.service";
 
 @Component({
   selector: 'app-register',
@@ -20,24 +21,33 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   ActionSignType = ActionSignType;
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router, private toastr: ToastrService) { }
+  // @ts-ignore
+  ecpUser: CertUserInfo;
+
+  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router, private toastr: ToastrService, private route: ActivatedRoute,
+              private userService: UserService) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.ecpUser = params as CertUserInfo;
+    });
     this.createRegisterForm()
   }
 
   createRegisterForm() {
     this.registerForm = this.fb.group({
-      iin: ['', [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(12),]],
+      iin: [this.ecpUser.number, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(12),]],
       password: ['', [Validators.required,Validators.minLength(6)]],
-      name: ['', [Validators.required, Validators.pattern("^[а-яА-ЯёЁәӘіІңҢғҒүҮұҰқҚөӨһҺ]*$")]],
-      surname: ['', [Validators.required, Validators.pattern("^[а-яА-ЯёЁәӘіІңҢғҒүҮұҰқҚөӨһҺ]*$")]],
-      patronymic: ['', [Validators.pattern("^[а-яА-ЯёЁәӘіІңҢғҒүҮұҰқҚөӨһҺ]*$")]],
+      name: [this.ecpUser.name, [Validators.required, Validators.pattern("^[а-яА-ЯёЁәӘіІңҢғҒүҮұҰқҚөӨһҺ]*$")]],
+      surname: [this.ecpUser.surname, [Validators.required, Validators.pattern("^[а-яА-ЯёЁәӘіІңҢғҒүҮұҰқҚөӨһҺ]*$")]],
+      patronymic: [this.ecpUser.middleName, [Validators.pattern("^[а-яА-ЯёЁәӘіІңҢғҒүҮұҰқҚөӨһҺ]*$")]],
       phone: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      checkbox: [false, [Validators.requiredTrue,Validators.required]]
+      email: [this.ecpUser.email, [Validators.required, Validators.email]],
+      checkbox: [false, [Validators.requiredTrue,Validators.required]],
+      birthDay: [this.userService.calculateBirthDay(this.ecpUser.number).toISOString().substring(0,10), [Validators.required]],
+      gender: [this.userService.calculateGender(this.ecpUser.number), [Validators.required]],
     })
-
+    // this.registerForm.get('birthDay')?.setValue(this.userService.calculateBirthDay(this.ecpUser.number))
   }
 
   onSubmit() {
@@ -63,5 +73,9 @@ export class RegisterComponent implements OnInit {
       this.registerForm.controls['iin'].setErrors({'wrong': true});
       console.log(this.registerForm.controls['iin'].errors)
     }
+  }
+
+  checkIINisExist() : boolean {
+    return this.ecpUser.number.length > 0;
   }
 }

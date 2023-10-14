@@ -9,6 +9,7 @@ import { initFlowbite } from 'flowbite';
 import {ActionSignType, CertUserInfo, SignKeyType} from 'src/app/shared/components/signin/authUserModel';
 import {IResponse} from "../../shared/models/common/response";
 import {$e} from "@angular/compiler/src/chars";
+import {HttpParams} from "@angular/common/http";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -23,6 +24,8 @@ export class LoginComponent implements OnInit {
 
   SignKeyType = SignKeyType;
   ActionSignType = ActionSignType;
+  // @ts-ignore
+  singRaw: "";
   constructor(private authService: AuthService, private fb: FormBuilder,private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -50,13 +53,19 @@ export class LoginComponent implements OnInit {
   }
 
    changeType(tab:string):void{
-    console.log(tab)
     this.tabType = tab;
   }
 
   loginBySign($event: CertUserInfo) {
-    this.authService.loginByEcp({iin: $event.number}).subscribe((user) => {
-      this.returnToUrl(user);
+    this.authService.loginByEcp({iin: $event.number, signText: $event.number}).subscribe((user) => {
+      if(user)
+        this.returnToUrl(user);
+      else{
+        // @ts-ignore
+        delete $event['keyHash'];
+        const queryString = this.convertObjectToQueryString($event);
+        this.router.navigateByUrl('/auth/register?' + queryString)
+      }
     }, error => {
       if (error.errors) {
         this.errors.messages = error.errors
@@ -103,5 +112,17 @@ export class LoginComponent implements OnInit {
         }
       }
     }
+  }
+
+  private convertObjectToQueryString(jsonObject: any): string {
+    let params = new HttpParams();
+
+    for (const key in jsonObject) {
+      if (jsonObject.hasOwnProperty(key)) {
+        params = params.set(key, jsonObject[key]);
+      }
+    }
+
+    return params.toString();
   }
 }
