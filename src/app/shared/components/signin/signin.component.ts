@@ -53,7 +53,6 @@ initConnection() {
 }
 
   createCMSSignatureFromBase64(event: any) {
-  console.log('sign event', event.authorityKeyIdentifier);
   this.inProcess = false;
   if (event.code != 200) {
       // this.sendUserNotify('error', event.message);
@@ -65,7 +64,6 @@ initConnection() {
 }
 
   signXml(event: any) {
-    console.log('event', event);
     this.inProcess = false;
     if (event.code != 200) {
       // this.sendUserNotify('error', event.message);
@@ -77,14 +75,16 @@ initConnection() {
   }
 
   getKeyInfo(event: any) {
-    console.log(event)
     this.inProcess = false;
     if (event.code != 200) {
       // this.sendUserNotify('error', event.message);
       return;
     }
     if(this.checkKeyToExpired(event.responseObject)){
-      const resp = this.parseStringToAuthUserInfo(event.responseObject.subjectDn)
+      let resp = this.parseStringToAuthUserInfo(event.responseObject.subjectDn)
+      resp.keyHashFull = event.responseObject.pem;
+      resp.keyHash = this.clearEcpKey(event.responseObject.pem);
+      console.log(resp);
       this.onOk.emit(resp);
     }
     else{
@@ -105,11 +105,18 @@ initConnection() {
       args: ['PKCS12']
     };
   }
-  if(this.command == ActionSignType.createCMSSignatureFromBase64 || this.command == ActionSignType.signXml){
+  if(this.command == ActionSignType.createCMSSignatureFromBase64){
     createCMSSignatureFromBase64 = {
       module: 'kz.gov.pki.knca.commonUtils',
       method: this.command,
       args: ['PKCS12', this.keyType, this.singRaw, true]
+    };
+  }
+  if(this.command == ActionSignType.signXml){
+    createCMSSignatureFromBase64 = {
+      module: 'kz.gov.pki.knca.commonUtils',
+      method: this.command,
+      args: ['PKCS12', this.keyType, this.singRaw, "", ""]
     };
   }
 
@@ -128,7 +135,8 @@ initConnection() {
       Country: '',
       middleName: '',
       email: '',
-      keyHash: ''
+      keyHash: '',
+      keyHashFull: ''
     };
 
     parts.forEach((part) => {
@@ -158,9 +166,6 @@ initConnection() {
         case 'E':
           authUserInfo.email = value;
           break;
-        case 'pem':
-          authUserInfo.keyHash = value;
-          break;
       }
     });
 
@@ -179,6 +184,27 @@ initConnection() {
     } else {
       return false;
     }
+  }
+
+  private clearEcpKey(key: string): string {
+    // Define the substrings to remove
+    const substringsToRemove = [
+      "-----END CERTIFICATE-----",
+      "-----BEGIN CERTIFICATE-----",
+      "\r",
+      "\n"
+    ];
+
+    // Remove the specified substrings
+    let result = key;
+    for (const substring of substringsToRemove) {
+      result = result.replace(new RegExp(substring, 'g'), "");
+    }
+
+    // Remove the last 3 characters
+    // result = result.slice(0, -3);
+
+    return result;
   }
 }
 

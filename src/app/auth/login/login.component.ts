@@ -63,6 +63,8 @@ export class LoginComponent implements OnInit {
       else{
         // @ts-ignore
         delete $event['keyHash'];
+        // @ts-ignore
+        delete $event['keyHashFull'];
         const queryString = this.convertObjectToQueryString($event);
         this.router.navigateByUrl('/auth/register?' + queryString)
       }

@@ -33,6 +33,7 @@ import {GlobalTranslateService} from "../../../shared/services/common/global-tra
 import {TranslateService} from "@ngx-translate/core";
 import * as IMask from "imask";
 import {ActionSignType, CertUserInfo, SignKeyType} from 'src/app/shared/components/signin/authUserModel';
+import {JsonConverterService} from "../../../shared/services/json-to-xml.service";
 
 @Component({
   selector: 'app-apply-request',
@@ -146,6 +147,7 @@ export class ApplyRequestComponent implements OnInit {
 
   SignKeyType = SignKeyType;
   ActionSignType = ActionSignType;
+  ecpUser = {} as CertUserInfo;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -165,7 +167,9 @@ export class ApplyRequestComponent implements OnInit {
     private positionService: PositionService,
     private localeTranslate: TranslateService,
     private location: Location,
-    public translate:GlobalTranslateService) {
+    public translate:GlobalTranslateService,
+    private jsonToXMLService: JsonConverterService
+    ) {
     this.dropdownSettings.selectAllText = this.localeTranslate.instant('SYSTEM.selectAll')
     this.dropdownSettings.unSelectAllText = this.localeTranslate.instant('SYSTEM.deleteAll')
     this.dropdownSettings.searchPlaceholderText = this.localeTranslate.instant('SYSTEM.search')
@@ -472,6 +476,7 @@ export class ApplyRequestComponent implements OnInit {
   AgreeWithPrivacy($event: CertUserInfo){
     this.requestForm.controls["agreed"].markAsTouched({});
     if($event.number== this.currentUser.iin){
+      this.ecpUser = $event;
       this.requestForm.controls["agreed"].setValue(true);
       const button = window.document.getElementById('modalButtonClose');
       if (button) {
@@ -496,7 +501,7 @@ export class ApplyRequestComponent implements OnInit {
       email: this.currentUser.email,
       phone: this.currentUser.phone,
       signKey: 'asfwegwrgwr',
-      UserSign: 'asfwegwrg4f42wr',
+      // UserSign: 'asfwegwrg4f42wr',
       imageUrl: this.filesData.image,
       educationUrl: this.filesData.education,
       autoBiography: this.filesData.autoBio,
@@ -560,4 +565,81 @@ export class ApplyRequestComponent implements OnInit {
   //END OTHER METHODS
 
 
+  checkSignAndSubmit($event: any) {
+    const regex = /<ds:X509Certificate>(.*?)<\/ds:X509Certificate>/s;
+    const match = $event.match(regex);
+    if (match) {
+      const x509Certificate = match[1];
+      const keyHash = this.clearEcpKey(x509Certificate);
+      if(keyHash == this.ecpUser.keyHash){
+        this.requestForm.get('UserSign')?.setValue($event);
+        this.requestForm.get('signKey')?.setValue($event);
+        this.onSubmit();
+      }
+      else{
+        this.agreeStatus = false;
+        this.requestForm.controls["agreed"].setValue(false);
+        alert('Переподпешите соглашение с помощью ЭЦП подписи')
+      }
+    } else {
+    }
+
+  }
+
+
+  private clearEcpKey(key: string): string {
+    // Define the substrings to remove
+    const substringsToRemove = [
+      "-----END CERTIFICATE-----",
+      "-----BEGIN CERTIFICATE-----",
+      "\r",
+      "\n"
+    ];
+
+    // Remove the specified substrings
+    let result = key;
+    for (const substring of substringsToRemove) {
+      result = result.replace(new RegExp(substring, 'g'), "");
+    }
+
+    // Remove the last 3 characters
+    // result = result.slice(0, -3);
+
+    return result;
+  }
+
+
+  getTextToSign() {
+    try{
+      const textToSign = {
+        "иин": this.currentUser.iin,
+        "Имя": this.currentUser.fullName,
+        "место жительства": this.birthArea,
+        "образование": this.educations.filter(z=>z.id == this.requestForm.get('educationId')?.value)[0]?.titleRu,
+        // @ts-ignore
+        "водительские права": this.dropdownDriverLicenseList.filter(z=> this.selectedDriverLicenseItems.includes(z.id))?.map((license) => license.titleRu).join(', '),
+        "опыт работы": this.requestForm.get('experienced')?.value ? 'Да' : 'Нет',
+        "служил" : this.isServedTrue ? 'Да' : 'Нет',
+        "номер части": this.isServedTrue ? this.requestForm.get('servedArmyNumber')?.value : '',
+        "должность ": this.isServedTrue ?  this.requestForm.get('positionName')?.value : '',
+        "звание": this.isServedTrue ?  this.armyRanks.filter(z=>z.id == this.requestForm.get('armyRankId')?.value)[0]?.titleRu : '',
+        "служил втш" : !this.isServedTrue ? 'Да' : 'Нет',
+        "номер части втш": !this.isServedTrue ? this.listVTSh.filter(z=>z.id == this.requestForm.get('VTShId')?.value)[0]?.titleRu : '',
+        "год втш": !this.isServedTrue ? this.requestForm.get('VTShYear')?.value : '',
+        "должность": this.positions.filter(z=>z.id == this.requestForm.get('positionId')?.value)[0]?.titleRu,
+        "срок заключения контракта": this.requestForm.get('contractYear')?.value,
+        "область": this.areas.filter(z=>z.id == this.requestForm.get('areaId')?.value)[0]?.titleRu,
+        "телефон": this.requestForm.get('phone')?.value,
+        "почта": this.requestForm.get('email')?.value,
+        "близкие_родственники": this.surveyRelatives.map(z=> "иин: " + z.iin + "имя: "+  z.surName + " " + z.name + " " + z.patronomic + "статус: " + this.relativeStatus.filter(x=> x.id == z.relativeId)[0]?.titleRu + "дата рождения: " + + z.birthDate)
+      }
+      let asd = "<root>" + this.jsonToXMLService.transformJsonString(textToSign) + "</root>";
+      console.log(asd)
+      return asd;
+    }
+    catch {
+      return "<root>ошибка</root>"
+    }
+
+  }
 }

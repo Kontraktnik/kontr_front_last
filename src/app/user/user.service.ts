@@ -26,7 +26,7 @@ export class UserService {
 
   sendRequest(values: any) {
     let params = new HttpParams();
-    params = params.append('UserSign', values.UserSign);
+    params = params.append('UserSign', 'asdasd');
     return this.http.post<IResponse<Survey>>(this.baseApiUrl + "/User/SendRequest", values, {observe: 'response', params}).pipe(
       map((response) => {
         return response.body

@@ -10,6 +10,7 @@ export interface CertUserInfo {
   middleName: string;
   email: string;
 
+  keyHashFull: string;
   keyHash: string;
   birthDay?: Date;
   gender?: GenderEnum;
